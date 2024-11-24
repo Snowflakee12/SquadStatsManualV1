@@ -1,0 +1,194 @@
+/* Style général */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Header */
+header {
+  background-color: rgba(230, 128, 18, 1); /* Orange vif pour l'en-tête */
+  color: white;
+  padding: 20px 30px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  border-bottom: 4px solid rgba(204, 115, 17, 1); /* Un orange plus sombre pour la bordure */
+}
+
+header img {
+  width: 50px;
+  height: auto;
+  margin-right: 15px;
+}
+
+/* Main content */
+main {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  color: rgba(230, 128, 18, 1); /* Utilisation de la couleur principale (orange) pour les titres */
+  margin-bottom: 20px;
+}
+
+/* Section - Summary */
+#summary {
+  text-align: center;
+  padding: 30px 0;
+  border-bottom: 2px solid #ddd;
+}
+
+#summary p {
+  font-size: 16px;
+  color: rgba(230, 128, 18, 1); /* Couleur orange pour le texte */
+  max-width: 800px;
+  margin: 10px auto;
+}
+
+/* Section - Charts */
+#charts {
+  display: flex;
+  flex-direction: column;  /* Modification pour aligner les graphiques en colonne */
+  gap: 30px;
+  padding: 30px 0;
+}
+
+.chart-container {
+  flex: 1;
+  min-width: 45%;
+  background-color: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;  /* Aligne les éléments à l'intérieur de chaque conteneur en colonne */
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-container h3 {
+  font-size: 18px;
+  color: rgba(230, 128, 18, 1); /* Couleur orange pour les sous-titres */
+  margin-bottom: 20px;
+}
+
+/* Table Section */
+#table {
+  padding: 30px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+table th, table td {
+  text-align: left;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+table th {
+  background-color: rgba(230, 128, 18, 1); /* Fond orange pour les en-têtes */
+  color: white;
+  font-weight: bold;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tr:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 15px 0;
+  background-color: rgba(230, 128, 18, 1); /* Fond orange pour le footer */
+  color: white;
+  font-size: 14px;
+}
+
+/* Limite la hauteur du tableau et ajoute un défilement vertical */
+#gameTableWrapper {
+  max-height: 400px;  /* Hauteur maximale pour afficher 10 lignes */
+  overflow-y: auto;   /* Active le défilement vertical */
+  display: block;
+}
+
+/* Tableau */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+table th {
+  background-color: #f2f2f2;
+}
+
+/* Style du header avec logo et positionnement du texte et du bouton admin */
+header {
+  display: flex;
+  justify-content: space-between;  /* Positionne le logo à gauche et admin à droite */
+  align-items: center;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+}
+
+header img {
+  width: 50px;  /* Taille du logo */
+  height: auto;
+  margin-right: 15px;  /* Espace entre le logo et le texte */
+}
+
+h1 {
+  margin: 0;
+  text-align: center; /* Centre le titre */
+  flex-grow: 1; /* Prend tout l'espace disponible entre le logo et le bouton */
+}
+
+.admin-link {
+  background-color: #e67812;  /* Utilise une couleur proche du logo */
+  color: white;
+  padding: 8px 15px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.admin-link:hover {
+  background-color: #d56700; /* Couleur plus foncée au survol */
+}
+
+h1 {
+  margin: 0;
+}
+
+/* Espacement entre les sections */
+.chart-container {
+  margin-bottom: 40px; /* Plus d'espace entre les graphiques */
+}

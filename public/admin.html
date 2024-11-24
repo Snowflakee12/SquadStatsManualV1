@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Ajouter Partie</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <style>
+    .back-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #f1f1f1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="back-button">Retour à la page principale</a>
+    <h1>Admin - Ajouter une Partie</h1>
+  </header>
+
+  <main>
+    <form id="addGameForm" action="/add-game" method="POST">
+      <label for="map">Carte jouée :</label>
+      <select id="map" name="map">
+        <option value="Skorpo">Skorpo</option>
+        <option value="Harju">Harju</option>
+        <option value="Kohat">Kohat</option>
+      </select>
+
+      <label for="winner">Faction gagnante :</label>
+      <select id="winner" name="winner">
+        <option value="USMC">USMC</option>
+        <option value="ADF">ADF</option>
+        <option value="BAF">BAF</option>
+        <option value="CAF">CAF</option>
+        <option value="USA">USA</option>
+        <option value="PLA">PLA</option>
+        <option value="PLA MC">PLA MC</option>
+        <option value="PLA GF">PLA GF</option>
+        <option value="VDV">VDV</option>
+        <option value="MEA">MEA</option>
+        <option value="TLF">TLF</option>
+        <option value="PMC">PMC</option>
+        <option value="INS">INS</option>
+        <option value="IMF">IMF</option>
+        <option value="RGF">RGF</option>
+      </select>
+
+      <label for="winnerBattalion">Bataillon gagnant :</label>
+      <select id="winnerBattalion" name="winnerBattalion">
+        <!-- Options dynamiques ajoutées par JavaScript -->
+      </select>
+
+      <label for="loser">Faction perdante :</label>
+      <select id="loser" name="loser">
+        <option value="USMC">USMC</option>
+        <option value="ADF">ADF</option>
+        <option value="BAF">BAF</option>
+        <option value="CAF">CAF</option>
+        <option value="USA">USA</option>
+        <option value="PLA">PLA</option>
+        <option value="PLA MC">PLA MC</option>
+        <option value="PLA GF">PLA GF</option>
+        <option value="VDV">VDV</option>
+        <option value="MEA">MEA</option>
+        <option value="TLF">TLF</option>
+        <option value="PMC">PMC</option>
+        <option value="INS">INS</option>
+        <option value="IMF">IMF</option>
+        <option value="RGF">RGF</option>
+      </select>
+      
+      <label for="loserBattalion">Bataillon perdant :</label>
+      <select id="loserBattalion" name="loserBattalion">
+        <!-- Options dynamiques ajoutées par JavaScript -->
+      </select>
+
+      <label for="mode">Mode de jeu :</label>
+      <select id="mode" name="mode">
+        <option value="RAAS">RAAS</option>
+        <option value="AAS">AAS</option>
+        <option value="Invasion">Invasion</option>
+        <option value="TC">TC</option>
+        <option value="Seed">Seed</option>
+      </select>
+
+      <label for="tickets">Écart de tickets :</label>
+      <input type="number" id="tickets" name="tickets" min="0">
+
+      <label for="entryDateTime">Date et Heure d'entrée :</label>
+      <input type="datetime-local" id="entryDateTime" name="entryDateTime" value="" required>
+
+      <button type="submit">Ajouter la Partie</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Statistiques Serveur Squad</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script>
+    // Mapping des bataillons par faction et catégorie
+    const factionBattalionMapping = {
+  "ADF": {
+    "Air assault": ["3rd Battalion, Royal Australian Regiment"],
+    "Combined Arms": ["3rd Brigade Battle Group"],
+    "Mechanized": ["1st Battalion, Royal Australian Regiment"],
+  },
+  "BAF": {
+    "Air assault": ["2nd Battalion, Parachute Regiment"],
+    "Armored": ["Queen's Royal Hussars Battle Group"],
+    "Combined Arms": ["3rd Division Battle Group"],
+    "Logistics": ["Royal Logistics Corps Battle Group"],
+  },
+  "CAF": {
+    "Air assault": ["3rd Battalion, Royal Canadian Regiment"],
+    "Armored": ["Lord Strathcona's Horse Regiment"],
+    "Combined Arms": ["1 Canadian Mechanized Brigade Group"],
+    "Light Infantry": ["12th Armored Regiment of Canada"],
+    "Mechanized": ["1st Battalion, Royal 22e Régiment"],
+    "Motorized": ["12th Armored Regiment of Canada"],
+    "Logistics": ["6 Canadian Combat Support Brigade"],
+  },
+  "USA": {
+    "Air assault": ["1st Brigade Combat Team, 82nd Airborne Division"],
+    "Armored": ["37th Armored Regiment, 1st Armored Division"],
+    "Combined Arms": ["3rd Brigade Combat Team, 1st Infantry Division"],
+    "Light Infantry": ["1st Brigade Combat Team, 10th Mountain Division"],
+    "Mechanized": ["1st Cavalry Regiment"],
+    "Motorized": ["2nd Cavalry Stryker Brigade Combat Team"],
+    "Logistics": ["497th Combat Sustainment Support Battalion"],
+  },
+  "USMC": {
+    "Air assault": ["1st Tank Battalion, 1st Marines"],
+    "Armored": ["1st Tank Battalion, 1st Marines"],
+    "Combined Arms": ["31st Marine Expeditionary Unit"],
+    "Light Infantry": ["1st Marines Regimental Combat Team"],
+    "Mechanized": ["3rd Light Armored Recon Battalion"],
+    "Motorized": ["3rd Light Armored Recon Battalion"],
+    "Logistics": ["2nd Marine Logistics Group"],
+    "Amphibious Assault": ["4th Marines Amphibious Ready Group"],
+  },
+  "PLA": {
+    "Air assault": ["161st Air Assault Brigade"],
+    "Armored": ["195th Heavy Combined Arms Brigade"],
+    "Combined Arms": ["118th Combined Arms Brigade"],
+    "Light Infantry": ["149th Mountain Infantry Brigade"],
+    "Mechanized": ["4th Medium Combined Arms Battalion"],
+    "Motorized": ["112th Medium Combined Arms Brigade"],
+    "Logistics": ["80th Support Brigade"],
+    "Amphibious Assault": ["14th Amphibious Combined Arms Brigade"],
+  },
+  "PLA MC": {
+    "Air assault": ["4th Marine Special Combat Battalion"],
+    "Armored": ["3rd Marine Heavy Battalion"],
+    "Combined Arms": ["5th Marine Combined Arms Brigade"],
+    "Light Infantry": ["4th Marine Special Combat Battalion"],
+    "Mechanized": ["7th Marine Medium Battalion"],
+    "Logistics": ["17th Marine Support Battalion"],
+    "Amphibious Assault": ["5th Marine Combined Arms Brigade"],
+  },
+  "PLA GF": {
+    "Armored": ["9th Heavy Combined Arms Battalion"],
+    "Combined Arms": ["14th Amphibious Combined Arms Battalion"],
+    "Mechanized": ["4th Medium Combined Arms Battalion"],
+    "Motorized": ["7th Marine Medium Battalion"],
+    "Amphibious Assault": ["14th Amphibious Combined Arms Brigade"],
+  },
+  "VDV": {
+    "Air assault": ["217th Guards Airborne Regiment"],
+    "Armored": ["104th Tank Battalion"],
+    "Combined Arms": ["7th Guards Mountain Air Assault Division"],
+    "Logistics": ["150th Support Battalion"],
+  },
+  "MEA": {
+    "Air assault": ["91st Air Assault Battalion"],
+    "Armored": ["60th Prince Assur Armored Brigade"],
+    "Combined Arms": ["1st Battalion, Legion of Babylon"],
+    "Light Infantry": ["4th Border Guards Group"],
+    "Mechanized": ["3rd King Qadesh Mechanized Infantry Brigade"],
+    "Motorized": ["51st Motorized Infantry Brigade Battle Group"],
+    "Logistics": ["Vizir Hussein 2nd Support Battalion"],
+  },
+  "TLF": {
+    "Air assault": ["1st Commando Brigade Battle Group"],
+    "Armored": ["4th Armored Brigade Battle Group"],
+    "Combined Arms": ["1st Army Battle Group"],
+    "Mechanized": ["66th Mechanized Infantry Brigade Battle Group"],
+    "Motorized": ["51st Motorized Infantry Brigade Battle Group"],
+    "Logistics": ["Land Forces Logistics Command Battle Group"],
+  },
+  "PMC": {
+    "Air assault": ["Murk Water Air Wing"],
+    "Combined Arms": ["Manticore Security Task Force"],
+    "Light Infantry": ["Overwatch 6 Patrol Group"],
+  },
+  "INS": {
+    "Armored": ["Irregular Armored Squadron"],
+    "Combined Arms": ["Irregular Battle Group"],
+    "Light Infantry": ["Irregular Light Infantry"],
+    "Mechanized": ["Irregular Mechanized Platoon"],
+    "Motorized": ["Irregular Motorized Platoon"],
+    "Logistics": ["Irregular Fire Support Group"],
+  },
+  "IMF": {
+    "Armored": ["Irregular Armored Squadron"],
+    "Combined Arms": ["Irregular Battle Group"],
+    "Light Infantry": ["Irregular Light Infantry"],
+    "Mechanized": ["Irregular Mechanized Platoon"],
+    "Motorized": ["Irregular Motorized Platoon"],
+    "Logistics": ["Irregular Fire Support Group"],
+  },
+  "RGF": {
+    "Armored": ["6th Separate Tank Brigade"],
+    "Combined Arms": ["49th Combined Arms Army"],
+    "Mechanized": ["205th Separate Motor Rifle Brigade"],
+    "Motorized": ["3rd Motor Rifle Brigade"],
+    "Logistics": ["78th Detached Logistics Brigade"],
+    "Amphibious Assault": ["336th Guards Naval Infantry Brigade"],
+  },
+};
+
+// Fonction pour ajouter des options par catégorie
+function updateBattalionList() {
+  const winnerFaction = document.getElementById("winner").value;
+  const loserFaction = document.getElementById("loser").value;
+
+  const winnerBattalionSelect = document.getElementById("winnerBattalion");
+  const loserBattalionSelect = document.getElementById("loserBattalion");
+
+  // Effacer les options actuelles
+  winnerBattalionSelect.innerHTML = '';
+  loserBattalionSelect.innerHTML = '';
+
+  // Ajouter des options pour la faction gagnante
+  Object.keys(factionBattalionMapping[winnerFaction]).forEach(category => {
+    const optionGroup = document.createElement("optgroup");
+    optionGroup.label = category;
+
+    factionBattalionMapping[winnerFaction][category].forEach(battalion => {
+      const option = document.createElement("option");
+      option.value = category;  // On envoie la catégorie, pas le nom du bataillon
+      option.textContent = battalion;
+      optionGroup.appendChild(option);
+    });
+
+    winnerBattalionSelect.appendChild(optionGroup);
+  });
+
+  // Ajouter des options pour la faction perdante
+  Object.keys(factionBattalionMapping[loserFaction]).forEach(category => {
+    const optionGroup = document.createElement("optgroup");
+    optionGroup.label = category;
+
+    factionBattalionMapping[loserFaction][category].forEach(battalion => {
+      const option = document.createElement("option");
+      option.value = category;  // Même chose ici, on envoie la catégorie
+      option.textContent = battalion;
+      optionGroup.appendChild(option);
+    });
+
+    loserBattalionSelect.appendChild(optionGroup);
+  });
+}
+
+// Mettre à jour les listes de bataillons lors du changement de faction
+document.getElementById("winner").addEventListener("change", updateBattalionList);
+document.getElementById("loser").addEventListener("change", updateBattalionList);
+
+// Mise à jour initiale des listes
+updateBattalionList();
+
+
+     // Définir la valeur par défaut du champ datetime-local à UTC+1
+     document.getElementById("entryDateTime").value = getCurrentDateTimeInUTCPlusOne();
+     
+     document.getElementById("addGameForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Empêche l'envoi par défaut du formulaire
+
+        // Récupérer la valeur de la date
+        const entryDateTime = document.getElementById("entryDateTime").value;
+
+        // Convertir la valeur en format ISO
+        const isoDateTime = new Date(entryDateTime).toISOString();
+
+        // Ajouter la date ISO au formulaire avant de l'envoyer
+        const inputDateISO = document.createElement("input");
+        inputDateISO.type = "hidden";
+        inputDateISO.name = "entryDateTimeISO";
+        inputDateISO.value = isoDateTime;
+        document.getElementById("addGameForm").appendChild(inputDateISO);
+
+        // Soumettre le formulaire avec la nouvelle donnée
+        this.submit();
+    });
+  </script>
+</body>
+</html>

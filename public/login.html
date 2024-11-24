@@ -1,0 +1,15 @@
+<form id="loginForm" action="/admin" method="POST">
+  <div class="form-group">
+    <label for="username">Nom d'utilisateur</label>
+    <input type="text" id="username" name="username" required placeholder="Entrez votre nom d'utilisateur">
+  </div>
+
+  <div class="form-group">
+    <label for="password">Mot de passe</label>
+    <input type="password" id="password" name="password" required placeholder="Entrez votre mot de passe">
+  </div>
+
+  <button type="submit" class="btn">Se connecter</button>
+
+  <p class="error-message" id="error-message"></p>
+</form>

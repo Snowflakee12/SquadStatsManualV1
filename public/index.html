@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistiques Serveur Squad</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <img src="logo122.jpg" alt="Logo"> <!-- Image du logo -->
+    <h1>Statistiques des Parties - Serveur Squad</h1>
+    <a href="login.html" class="admin-link">Admin</a> <!-- Lien vers la page de login -->
+  </header>
+
+  <main>
+    <section id="summary">
+      <h2>Résumé Global</h2>
+      <p>Total Parties : <strong id="totalGames">0</strong></p>
+    </section>
+
+    <section id="table">
+      <h2>Historique des Parties</h2>
+      <div id="gameTableWrapper"> <!-- Wrapper pour activer le défilement -->
+        <table>
+          <thead>
+            <tr>
+              <th>Date et Heure</th>
+              <th>Carte</th>
+              <th>Mode de Jeu</th>
+              <th>Faction Gagnante et Unité</th>
+              <th>Faction Perdante et Unité</th>
+              <th>Écart de Tickets</th>
+            </tr>
+          </thead>
+          <tbody id="gameTable">
+            <!-- Les lignes des données vont être insérées ici -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="charts">
+      <h2>Graphiques</h2>
+      <div class="chart-container">
+        <h3>Winrate des factions</h3> <!-- Titre du premier graphique -->
+        <canvas id="factionsPickrateChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Pickrate des maps</h3> <!-- Titre du deuxième graphique -->
+        <canvas id="mapsPickrateChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="emptyChart"></canvas> <!-- Graphique vide pour futur ajout -->
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Statistiques Coalition by Snowflakee1206</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Fonction principale pour récupérer les données et générer les statistiques
+    function loadData() {
+      fetch('/api/games?' + new Date().getTime()) // Cache-busting pour s'assurer des données fraîches
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);  // Ajout de ce log pour inspecter la structure des données
+
+          const tableBody = document.querySelector('#gameTable');
+          const totalGames = document.querySelector('#totalGames');
+          let maps = new Set();
+          let factions = new Set();
+
+          // Trier les données par date (assurant que 'gameDate' est au format ISO)
+          data.sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
+
+          // Vider le tableau avant de le remplir avec les nouvelles données
+          tableBody.innerHTML = '';
+
+          data.forEach(game => {
+            const row = document.createElement('tr');
+
+            // Créer un objet Date à partir de game.gameDate (format ISO)
+            const dateObject = new Date(game.gameDate);
+            const formattedDate = !isNaN(dateObject.getTime()) ? dateObject.toLocaleString() : 'Date invalide';
+
+            // Insérer les données dans le tableau
+            row.innerHTML = `
+              <td>${formattedDate}</td>
+              <td>${game.map}</td>
+              <td>${game.gameMode}</td>
+              <td>${game.winnerFaction} (${game.winnerBattalion})</td>
+              <td>${game.loserFaction} (${game.loserBattalion})</td>
+              <td>${game.ticketDiff}</td>
+            `;
+            tableBody.appendChild(row);
+
+            // Collecte des maps et factions pour le résumé
+            maps.add(game.map);
+            factions.add(game.winnerFaction);
+            factions.add(game.loserFaction);
+          });
+
+          // Mise à jour du résumé
+          totalGames.textContent = data.length;
+
+          // Générer les graphiques
+          generateFactionsPickrateChart(data);
+          generateMapsPickrateChart(data);
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération des données:', error);
+        });
+    }
+
+    // Appel initial pour charger les données
+    loadData();
+
+    // Fonction pour générer un graphique du pickrate des factions
+    function generateFactionsPickrateChart(data) {
+      const factionsCount = {};
+      data.forEach(game => {
+        factionsCount[game.winnerFaction] = (factionsCount[game.winnerFaction] || 0) + 1;
+      });
+
+      const labels = Object.keys(factionsCount);
+      const values = Object.values(factionsCount);
+      const totalGames = data.length;
+
+      const ctx = document.getElementById('factionsPickrateChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values.map(value => (value / totalGames) * 100),
+            backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FF9C33'], // Variété de couleurs
+            borderColor: '#fff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false, // Retirer la légende du dessus
+            },
+            tooltip: {
+              callbacks: {
+                label: function(tooltipItem) {
+                  return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Fonction pour générer un graphique du pickrate des maps
+    function generateMapsPickrateChart(data) {
+      const mapsCount = {};
+      data.forEach(game => {
+        mapsCount[game.map] = (mapsCount[game.map] || 0) + 1;
+      });
+
+      const labels = Object.keys(mapsCount);
+      const values = Object.values(mapsCount);
+      const totalGames = data.length;
+
+      const ctx = document.getElementById('mapsPickrateChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values.map(value => (value / totalGames) * 100),
+            backgroundColor: ['#1E90FF', '#FF6347', '#32CD32', '#FFD700', '#8A2BE2'], // Variété de couleurs
+            borderColor: '#fff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false, // Retirer la légende du dessus
+            },
+            tooltip: {
+              callbacks: {
+                label: function(tooltipItem) {
+                  return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
