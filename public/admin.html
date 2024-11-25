@@ -302,12 +302,17 @@
 };
 
 // Fonction pour ajouter des options par catégorie
+// Fonction pour ajouter des options par catégorie
 function updateBattalionList() {
   const winnerFaction = document.getElementById("winner").value;
   const loserFaction = document.getElementById("loser").value;
 
   const winnerBattalionSelect = document.getElementById("winnerBattalion");
   const loserBattalionSelect = document.getElementById("loserBattalion");
+
+  // Sauvegarder la valeur sélectionnée avant la mise à jour des listes
+  const selectedWinnerBattalion = winnerBattalionSelect.value;
+  const selectedLoserBattalion = loserBattalionSelect.value;
 
   // Effacer les options actuelles
   winnerBattalionSelect.innerHTML = '';
@@ -320,7 +325,7 @@ function updateBattalionList() {
 
     factionBattalionMapping[winnerFaction][category].forEach(battalion => {
       const option = document.createElement("option");
-      option.value = category;  // On envoie la catégorie, pas le nom du bataillon
+      option.value = battalion;  // On met le nom du bataillon comme valeur
       option.textContent = battalion;
       optionGroup.appendChild(option);
     });
@@ -335,14 +340,30 @@ function updateBattalionList() {
 
     factionBattalionMapping[loserFaction][category].forEach(battalion => {
       const option = document.createElement("option");
-      option.value = category;  // Même chose ici, on envoie la catégorie
+      option.value = battalion;  // On met le nom du bataillon comme valeur
       option.textContent = battalion;
       optionGroup.appendChild(option);
     });
 
     loserBattalionSelect.appendChild(optionGroup);
   });
+
+  // Réappliquer la sélection sauvegardée
+  if (selectedWinnerBattalion) {
+    winnerBattalionSelect.value = selectedWinnerBattalion;
+  }
+  if (selectedLoserBattalion) {
+    loserBattalionSelect.value = selectedLoserBattalion;
+  }
 }
+
+// Mettre à jour les listes de bataillons lors du changement de faction
+document.getElementById("winner").addEventListener("change", updateBattalionList);
+document.getElementById("loser").addEventListener("change", updateBattalionList);
+
+// Mise à jour initiale des listes
+updateBattalionList();
+
 
 // Mettre à jour les listes de bataillons lors du changement de faction
 document.getElementById("winner").addEventListener("change", updateBattalionList);
