@@ -1,515 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Ajouter Partie</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-  <style>
-    .back-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 10px 15px;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Ajouter Partie</title>
+    <link rel="icon" type="image/x-icon" href="logo122.jpg">
 
-    .back-button:hover {
-      background-color: #0056b3;
-    }
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <style>
+        .back-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
 
-    main {
-      padding: 20px;
-    }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    footer {
-      text-align: center;
-      padding: 10px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background-color: #f1f1f1;
-    }
+        main {
+            padding: 20px;
+        }
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
+        footer {
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f1f1f1;
+        }
 
-    select, input, button {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
 
-    button {
-      background-color: #007bff;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-    }
+        select,
+        input,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
 
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+        button {
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .delete-btn {
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: #d9534f;
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <a href="/" class="back-button">Retour à la page principale</a>
-    <h1>Admin - Ajouter une Partie</h1>
-  </header>
+    <header>
+        <a href="/" class="back-button">Retour à la page principale</a>
+        <h1>Admin - Ajouter une Partie</h1>
+    </header>
 
-  <main>
-    <form id="addGameForm" action="/add-game" method="POST">
-      <label for="map">Carte jouée :</label>
-      <select id="map" name="map">
-        <option value="Skorpo">Skorpo</option>
-        <option value="Harju">Harju</option>
-        <option value="Kohat">Kohat</option>
-        <option value="Lashkar Valley">Lashkar Valley</option>
-        <option value="Narva">Narva</option>
-        <option value="Yehorivka">Yehorivka</option>
-        <option value="Sumari Bala">Sumari Bala</option>
-        <option value="Tallil Outskirts">Tallil Outskirts</option>
-        <option value="Belaya">Belaya</option>
-        <option value="Fool's Road">Fool's Road</option>
-        <option value="Gorodok">Gorodok</option>
-        <option value="Kokan">Kokan</option>
-        <option value="Kamdesh Highlands">Kamdesh Highlands</option>
-        <option value="Mutaha">Mutaha</option>
-        <option value="Manic">Manic</option>
-        <option value="Goose Bay">Goose Bay</option>
-        <option value="Black Coast">Black Coast</option>
-        <option value="Pacific Proving Grounds">Pacific Proving Grounds</option>
-        <option value="Mestia">Mestia</option>
-        <option value="Chora">Chora</option>
-        <option value="Logar Valley">Logar Valley</option>
-        <option value="Sanxian">Sanxian</option>
-        <option value="Al Basrah">Al Basrah</option>
-        <option value="Anvil">Anvil</option>
-        <option value="Fallujah">Fallujah</option>
-        
-      </select>
+    <main>
+        <form id="addGameForm" action="/add-game" method="POST">
+            <label for="map">Carte jouée :</label>
+            <select id="map" name="map">
+                <option value="Skorpo">Skorpo</option>
+                <option value="Harju">Harju</option>
+                <option value="Kohat">Kohat</option>
+                <option value="Lashkar Valley">Lashkar Valley</option>
+                <option value="Narva">Narva</option>
+                <option value="Yehorivka">Yehorivka</option>
+                <option value="Sumari Bala">Sumari Bala</option>
+                <option value="Tallil Outskirts">Tallil Outskirts</option>
+                <option value="Belaya">Belaya</option>
+                <option value="Fool's Road">Fool's Road</option>
+                <option value="Gorodok">Gorodok</option>
+                <option value="Kokan">Kokan</option>
+                <option value="Kamdesh Highlands">Kamdesh Highlands</option>
+                <option value="Mutaha">Mutaha</option>
+                <option value="Manic">Manic</option>
+                <option value="Goose Bay">Goose Bay</option>
+                <option value="Black Coast">Black Coast</option>
+                <option value="Pacific Proving Grounds">Pacific Proving Grounds</option>
+                <option value="Mestia">Mestia</option>
+                <option value="Chora">Chora</option>
+                <option value="Logar Valley">Logar Valley</option>
+                <option value="Sanxian">Sanxian</option>
+                <option value="Al Basrah">Al Basrah</option>
+                <option value="Anvil">Anvil</option>
+                <option value="Fallujah">Fallujah</option>
+            </select>
 
-      <label for="winner">Faction gagnante :</label>
-      <select id="winner" name="winner">
-        <option value="USMC">USMC</option>
-        <option value="ADF">ADF</option>
-        <option value="BAF">BAF</option>
-        <option value="CAF">CAF</option>
-        <option value="USA">USA</option>
-        <option value="PLA">PLA</option>
-        <option value="PLA MC">PLA MC</option>
-        <option value="PLA GF">PLA GF</option>
-        <option value="VDV">VDV</option>
-        <option value="MEA">MEA</option>
-        <option value="TLF">TLF</option>
-        <option value="PMC">PMC</option>
-        <option value="INS">INS</option>
-        <option value="IMF">IMF</option>
-        <option value="RGF">RGF</option>
-      </select>
+            <label for="winner">Faction gagnante :</label>
+            <select id="winner" name="winner">
+                <option value="USMC">USMC</option>
+                <option value="ADF">ADF</option>
+                <option value="BAF">BAF</option>
+                <option value="CAF">CAF</option>
+                <option value="USA">USA</option>
+                <option value="PLA">PLA</option>
+                <option value="PLA MC">PLA MC</option>
+                <option value="PLA GF">PLA GF</option>
+                <option value="VDV">VDV</option>
+                <option value="MEA">MEA</option>
+                <option value="TLF">TLF</option>
+                <option value="PMC">PMC</option>
+                <option value="INS">INS</option>
+                <option value="IMF">IMF</option>
+                <option value="RGF">RGF</option>
+            </select>
 
-      <label for="winnerBattalion">Bataillon gagnant :</label>
-      <select id="winnerBattalion" name="winnerBattalion">
-        <!-- Options dynamiques ajoutées par JavaScript -->
-      </select>
+            <label for="winnerBattalion">Bataillon gagnant :</label>
+            <select id="winnerBattalion" name="winnerBattalion">
+                <!-- Options dynamiques ajoutées par JavaScript -->
+            </select>
 
-      <label for="loser">Faction perdante :</label>
-      <select id="loser" name="loser">
-        <option value="USMC">USMC</option>
-        <option value="ADF">ADF</option>
-        <option value="BAF">BAF</option>
-        <option value="CAF">CAF</option>
-        <option value="USA">USA</option>
-        <option value="PLA">PLA</option>
-        <option value="PLA MC">PLA MC</option>
-        <option value="PLA GF">PLA GF</option>
-        <option value="VDV">VDV</option>
-        <option value="MEA">MEA</option>
-        <option value="TLF">TLF</option>
-        <option value="PMC">PMC</option>
-        <option value="INS">INS</option>
-        <option value="IMF">IMF</option>
-        <option value="RGF">RGF</option>
-      </select>
-      
-      <label for="loserBattalion">Bataillon perdant :</label>
-      <select id="loserBattalion" name="loserBattalion">
-        <!-- Options dynamiques ajoutées par JavaScript -->
-      </select>
+            <label for="loser">Faction perdante :</label>
+            <select id="loser" name="loser">
+                <option value="USMC">USMC</option>
+                <option value="ADF">ADF</option>
+                <option value="BAF">BAF</option>
+                <option value="CAF">CAF</option>
+                <option value="USA">USA</option>
+                <option value="PLA">PLA</option>
+                <option value="PLA MC">PLA MC</option>
+                <option value="PLA GF">PLA GF</option>
+                <option value="VDV">VDV</option>
+                <option value="MEA">MEA</option>
+                <option value="TLF">TLF</option>
+                <option value="PMC">PMC</option>
+                <option value="INS">INS</option>
+                <option value="IMF">IMF</option>
+                <option value="RGF">RGF</option>
+            </select>
 
-      <label for="mode">Mode de jeu :</label>
-      <select id="mode" name="mode">
-        <option value="RAAS">RAAS</option>
-        <option value="AAS">AAS</option>
-        <option value="Invasion">Invasion</option>
-        <option value="TC">TC</option>
-        <option value="Seed">Seed</option>
-      </select>
+            <label for="loserBattalion">Bataillon perdant :</label>
+            <select id="loserBattalion" name="loserBattalion">
+                <!-- Options dynamiques ajoutées par JavaScript -->
+            </select>
 
-      <label for="tickets">Écart de tickets :</label>
-      <input type="number" id="tickets" name="tickets" min="0">
+            <label for="mode">Mode de jeu :</label>
+            <select id="mode" name="mode">
+                <option value="RAAS">RAAS</option>
+                <option value="AAS">AAS</option>
+                <option value="Invasion">Invasion</option>
+                <option value="TC">TC</option>
+                <option value="Seed">Seed</option>
+            </select>
 
-      <label for="entryDateTime">Date et Heure d'entrée :</label>
-      <input type="datetime-local" id="entryDateTime" name="entryDateTime" value="" required>
+            <label for="tickets">Écart de tickets :</label>
+            <input type="number" id="tickets" name="tickets" min="0">
 
-      <button type="submit">Ajouter la Partie</button>
-    </form>
+            <label for="entryDateTime">Date et Heure d'entrée :</label>
+            <input type="datetime-local" id="entryDateTime" name="entryDateTime" value="" required>
 
-    <section id="summary">
-      <h2>Résumé Global</h2>
-      <p>Total Parties : <strong id="totalGames">0</strong></p>
-    </section>
+            <button type="submit">Ajouter la Partie</button>
+        </form>
 
-    <section id="table">
-      <h2>Historique des Parties</h2>
-      <div id="gameTableWrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Date et Heure</th>
-              <th>Carte</th>
-              <th>Mode de Jeu</th>
-              <th>Faction Gagnante et Unité</th>
-              <th>Faction Perdante et Unité</th>
-              <th>Écart de Tickets</th>
-              <th>Actions</th> <!-- New column for delete action -->
-            </tr>
-          </thead>
-          <tbody id="gameTable">
-            <!-- Rows dynamically added by JavaScript will include a delete button -->
-          </tbody>
-        </table>
-      </div>
-    </section>
-    
-  </main>
+        <section id="summary">
+            <h2>Résumé Global</h2>
+            <p>Total Parties : <strong id="totalGames">0</strong></p>
+        </section>
 
-  <footer>
-    <p>&copy; 2024 Statistiques Serveur Squad</p>
-  </footer>
+        <section id="table">
+            <h2>Historique des Parties</h2>
+            <div id="gameTableWrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date et Heure</th>
+                            <th>Carte</th>
+                            <th>Mode de Jeu</th>
+                            <th>Faction Gagnante et Unité</th>
+                            <th>Faction Perdante et Unité</th>
+                            <th>Écart de Tickets</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gameTable">
+                        <!-- Rows dynamically added by JavaScript will include a delete button -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-  <script>
+    </main>
 
-function loadData() {
-      fetch('/api/games?' + new Date().getTime()) 
-      
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);  
-          
+    <footer>
+        <p>&copy; 2024 Statistiques Serveur Squad</p>
+    </footer>
 
-          const tableBody = document.querySelector('#gameTable');
-          const totalGames = document.querySelector('#totalGames');
-          let maps = new Set();
-          let factions = new Set();
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        const factionBattalionMapping = {
+            "ADF": {
+                "Air assault": ["3rd Battalion, Royal Australian Regiment"],
+                "Combined Arms": ["3rd Brigade Battle Group"],
+                "Mechanized": ["1st Battalion, Royal Australian Regiment"]
+            },
+            "BAF": {
+                "Air assault": ["2nd Battalion, Parachute Regiment"],
+                "Armored": ["Queen's Royal Hussars Battle Group"],
+                "Combined Arms": ["3rd Division Battle Group"],
+                "Logistics": ["Royal Logistics Corps Battle Group"]
+            },
+            // (Ajoutez les autres factions ici)
+        };
 
-          
-          
-          data.sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
+        function updateBattalionList() {
+            const winnerFaction = document.getElementById("winner").value;
+            const loserFaction = document.getElementById("loser").value;
 
-          
-          
-          tableBody.innerHTML = '';
+            const winnerBattalionSelect = document.getElementById("winnerBattalion");
+            const loserBattalionSelect = document.getElementById("loserBattalion");
 
-          data.forEach(game => {
-  const row = document.createElement('tr');
+            // Sauvegarder les valeurs sélectionnées avant la mise à jour des listes
+            const selectedWinnerBattalion = winnerBattalionSelect.value;
+            const selectedLoserBattalion = loserBattalionSelect.value;
 
-  const dateObject = new Date(game.gameDate);
-  const formattedDate = !isNaN(dateObject.getTime()) ? dateObject.toLocaleString() : 'Date invalide';
+            // Effacer les options actuelles sans effacer le contenu sélectionné
+            winnerBattalionSelect.innerHTML = '';
+            loserBattalionSelect.innerHTML = '';
 
-  row.innerHTML = `
-    <td>${formattedDate}</td>
-    <td>${game.map}</td>
-    <td>${game.gameMode}</td>
-    <td>${game.winnerFaction} (${game.winnerBattalion})</td>
-    <td>${game.loserFaction} (${game.loserBattalion})</td>
-    <td>${game.ticketDiff}</td>
-    <td><button class="delete-btn" data-id="${game.id}">Supprimer</button></td> <!-- Delete button -->
-  `;
-  tableBody.appendChild(row);
+            // Ajouter des options pour la faction gagnante
+            if (factionBattalionMapping[winnerFaction]) {
+                Object.keys(factionBattalionMapping[winnerFaction]).forEach(category => {
+                    const optgroup = document.createElement("optgroup");
+                    optgroup.label = category;
+                    factionBattalionMapping[winnerFaction][category].forEach(battalion => {
+                        const option = document.createElement("option");
+                        option.value = battalion;
+                        option.textContent = battalion;
+                        optgroup.appendChild(option);
+                    });
+                    winnerBattalionSelect.appendChild(optgroup);
+                });
+            }
 
-  // Update maps and factions (if necessary)
-  maps.add(game.map);
-  factions.add(game.winnerFaction);
-  factions.add(game.loserFaction);
-});
+            // Réappliquer la valeur sélectionnée du gagnant s'il y a une correspondance
+            if (selectedWinnerBattalion) {
+                winnerBattalionSelect.value = selectedWinnerBattalion;
+            }
 
-          
-          totalGames.textContent = data.length;
-        })
-        .catch(error => {
-          console.error('Erreur lors de la récupération des données:', error);
+            // Ajouter des options pour la faction perdante
+            if (factionBattalionMapping[loserFaction]) {
+                Object.keys(factionBattalionMapping[loserFaction]).forEach(category => {
+                    const optgroup = document.createElement("optgroup");
+                    optgroup.label = category;
+                    factionBattalionMapping[loserFaction][category].forEach(battalion => {
+                        const option = document.createElement("option");
+                        option.value = battalion;
+                        option.textContent = battalion;
+                        optgroup.appendChild(option);
+                    });
+                    loserBattalionSelect.appendChild(optgroup);
+                });
+            }
+
+            // Réappliquer la valeur sélectionnée du perdant s'il y a une correspondance
+            if (selectedLoserBattalion) {
+                loserBattalionSelect.value = selectedLoserBattalion;
+            }
+        }
+
+        document.getElementById("winner").addEventListener("change", updateBattalionList);
+        document.getElementById("loser").addEventListener("change", updateBattalionList);
+
+        // Mise à jour initiale des listes
+        updateBattalionList();
+
+        // Gestion de la soumission du formulaire
+        document.getElementById("addGameForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            if (data.entryDateTime) {
+                data.entryDateTime = new Date(data.entryDateTime).toISOString();
+            }
+
+            fetch('/add-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.message === 'Partie ajoutée avec succès') {
+                        alert('Partie ajoutée avec succès');
+                        document.getElementById("addGameForm").reset();
+                        document.getElementById("entryDateTime").value = getCurrentDateTimeInUTCPlusOne();
+                        loadData();
+                    } else {
+                        alert('Erreur : ' + result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de l\'ajout de la partie :', error);
+                    alert('Erreur lors de l\'ajout de la partie');
+                });
         });
-    }
 
-    
-    loadData();
+        // Définir la valeur par défaut du champ datetime-local à UTC+1
+        function getCurrentDateTimeInUTCPlusOne() {
+            const now = new Date();
+            now.setHours(now.getHours() + 1);
+            return now.toISOString().slice(0, 16);
+        }
 
-    document.addEventListener('click', function(e) {
-  if (e.target && e.target.classList.contains('delete-btn')) {
-    const gameId = e.target.getAttribute('data-id');
-    
-    // Confirm deletion
-    const confirmDelete = confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');
-    if (!confirmDelete) return;
+        document.getElementById("entryDateTime").value = getCurrentDateTimeInUTCPlusOne();
 
-    // Send a DELETE request to the backend to delete the game
-    fetch(`/api/games/${gameId}`, {
-      method: 'DELETE',
-    })
-    .then(response => {
-      if (response.ok) {
-        alert('Jeu supprimé avec succès');
-        loadData(); // Reload the data to reflect the change
-      } else {
-        alert('Erreur lors de la suppression du jeu');
-      }
-    })
-    .catch(error => {
-      console.error('Erreur lors de la suppression:', error);
-    });
-  }
-});
-    // Mapping des bataillons par faction et catégorie
+        // Fonction pour charger les données
+        function loadData() {
+            fetch('/api/games?' + new Date().getTime())
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#gameTable');
+                    const totalGames = document.querySelector('#totalGames');
+                    tableBody.innerHTML = '';
 
+                    data.forEach(game => {
+                        const row = document.createElement('tr');
+                        const formattedDate = new Date(game.gameDate).toLocaleString();
 
+                        row.innerHTML = `
+                            <td>${formattedDate}</td>
+                            <td>${game.map}</td>
+                            <td>${game.gameMode}</td>
+                            <td>${game.winnerFaction} (${game.winnerBattalion})</td>
+                            <td>${game.loserFaction} (${game.loserBattalion})</td>
+                            <td>${game.ticketDiff}</td>
+                            <td><button class="delete-btn" data-id="${game.id}">Supprimer</button></td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
 
-    const factionBattalionMapping = {
-  "ADF": {
-    "Air assault": ["3rd Battalion, Royal Australian Regiment"],
-    "Combined Arms": ["3rd Brigade Battle Group"],
-    "Mechanized": ["1st Battalion, Royal Australian Regiment"],
-  },
-  "BAF": {
-    "Air assault": ["2nd Battalion, Parachute Regiment"],
-    "Armored": ["Queen's Royal Hussars Battle Group"],
-    "Combined Arms": ["3rd Division Battle Group"],
-    "Logistics": ["Royal Logistics Corps Battle Group"],
-  },
-  "CAF": {
-    "Air assault": ["3rd Battalion, Royal Canadian Regiment"],
-    "Armored": ["Lord Strathcona's Horse Regiment"],
-    "Combined Arms": ["1 Canadian Mechanized Brigade Group"],
-    "Light Infantry": ["12th Armored Regiment of Canada"],
-    "Mechanized": ["1st Battalion, Royal 22e Régiment"],
-    "Motorized": ["12th Armored Regiment of Canada"],
-    "Logistics": ["6 Canadian Combat Support Brigade"],
-  },
-  "USA": {
-    "Air assault": ["1st Brigade Combat Team, 82nd Airborne Division"],
-    "Armored": ["37th Armored Regiment, 1st Armored Division"],
-    "Combined Arms": ["3rd Brigade Combat Team, 1st Infantry Division"],
-    "Light Infantry": ["1st Brigade Combat Team, 10th Mountain Division"],
-    "Mechanized": ["1st Cavalry Regiment"],
-    "Motorized": ["2nd Cavalry Stryker Brigade Combat Team"],
-    "Logistics": ["497th Combat Sustainment Support Battalion"],
-  },
-  "USMC": {
-    "Air assault": ["1st Tank Battalion, 1st Marines"],
-    "Armored": ["1st Tank Battalion, 1st Marines"],
-    "Combined Arms": ["31st Marine Expeditionary Unit"],
-    "Light Infantry": ["1st Marines Regimental Combat Team"],
-    "Mechanized": ["3rd Light Armored Recon Battalion"],
-    "Motorized": ["3rd Light Armored Recon Battalion"],
-    "Logistics": ["2nd Marine Logistics Group"],
-    "Amphibious Assault": ["4th Marines Amphibious Ready Group"],
-  },
-  "PLA": {
-    "Air assault": ["161st Air Assault Brigade"],
-    "Armored": ["195th Heavy Combined Arms Brigade"],
-    "Combined Arms": ["118th Combined Arms Brigade"],
-    "Light Infantry": ["149th Mountain Infantry Brigade"],
-    "Mechanized": ["4th Medium Combined Arms Battalion"],
-    "Motorized": ["112th Medium Combined Arms Brigade"],
-    "Logistics": ["80th Support Brigade"],
-    "Amphibious Assault": ["14th Amphibious Combined Arms Brigade"],
-  },
-  "PLA MC": {
-    "Air assault": ["4th Marine Special Combat Battalion"],
-    "Armored": ["3rd Marine Heavy Battalion"],
-    "Combined Arms": ["5th Marine Combined Arms Brigade"],
-    "Light Infantry": ["4th Marine Special Combat Battalion"],
-    "Mechanized": ["7th Marine Medium Battalion"],
-    "Logistics": ["17th Marine Support Battalion"],
-    "Amphibious Assault": ["5th Marine Combined Arms Brigade"],
-  },
-  "PLA GF": {
-    "Armored": ["9th Heavy Combined Arms Battalion"],
-    "Combined Arms": ["14th Amphibious Combined Arms Battalion"],
-    "Mechanized": ["4th Medium Combined Arms Battalion"],
-    "Motorized": ["7th Marine Medium Battalion"],
-    "Amphibious Assault": ["14th Amphibious Combined Arms Brigade"],
-  },
-  "VDV": {
-    "Air assault": ["217th Guards Airborne Regiment"],
-    "Armored": ["104th Tank Battalion"],
-    "Combined Arms": ["7th Guards Mountain Air Assault Division"],
-    "Logistics": ["150th Support Battalion"],
-  },
-  "MEA": {
-    "Air assault": ["91st Air Assault Battalion"],
-    "Armored": ["60th Prince Assur Armored Brigade"],
-    "Combined Arms": ["1st Battalion, Legion of Babylon"],
-    "Light Infantry": ["4th Border Guards Group"],
-    "Mechanized": ["3rd King Qadesh Mechanized Infantry Brigade"],
-    "Motorized": ["51st Motorized Infantry Brigade Battle Group"],
-    "Logistics": ["Vizir Hussein 2nd Support Battalion"],
-  },
-  "TLF": {
-    "Air assault": ["1st Commando Brigade Battle Group"],
-    "Armored": ["4th Armored Brigade Battle Group"],
-    "Combined Arms": ["1st Army Battle Group"],
-    "Mechanized": ["66th Mechanized Infantry Brigade Battle Group"],
-    "Motorized": ["51st Motorized Infantry Brigade Battle Group"],
-    "Logistics": ["Land Forces Logistics Command Battle Group"],
-  },
-  "PMC": {
-    "Air assault": ["Murk Water Air Wing"],
-    "Combined Arms": ["Manticore Security Task Force"],
-    "Light Infantry": ["Overwatch 6 Patrol Group"],
-  },
-  "INS": {
-    "Armored": ["Irregular Armored Squadron"],
-    "Combined Arms": ["Irregular Battle Group"],
-    "Light Infantry": ["Irregular Light Infantry"],
-    "Mechanized": ["Irregular Mechanized Platoon"],
-    "Motorized": ["Irregular Motorized Platoon"],
-    "Logistics": ["Irregular Fire Support Group"],
-  },
-  "IMF": {
-    "Armored": ["Irregular Armored Squadron"],
-    "Combined Arms": ["Irregular Battle Group"],
-    "Light Infantry": ["Irregular Light Infantry"],
-    "Mechanized": ["Irregular Mechanized Platoon"],
-    "Motorized": ["Irregular Motorized Platoon"],
-    "Logistics": ["Irregular Fire Support Group"],
-  },
-  "RGF": {
-    "Armored": ["6th Separate Tank Brigade"],
-    "Combined Arms": ["49th Combined Arms Army"],
-    "Mechanized": ["205th Separate Motor Rifle Brigade"],
-    "Motorized": ["3rd Motor Rifle Brigade"],
-    "Logistics": ["78th Detached Logistics Brigade"],
-    "Amphibious Assault": ["336th Guards Naval Infantry Brigade"],
-  },
-};
+                    totalGames.textContent = data.length;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données:', error);
+                });
+        }
 
-// Fonction pour ajouter des options par catégorie
-// Fonction pour ajouter des options par catégorie
-function updateBattalionList() {
-  const winnerFaction = document.getElementById("winner").value;
-  const loserFaction = document.getElementById("loser").value;
+        loadData();
 
-  const winnerBattalionSelect = document.getElementById("winnerBattalion");
-  const loserBattalionSelect = document.getElementById("loserBattalion");
+        // Gestion de la suppression des parties
+        document.addEventListener('click', function (e) {
+            if (e.target && e.target.classList.contains('delete-btn')) {
+                const gameId = e.target.getAttribute('data-id');
+                const confirmDelete = confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');
+                if (!confirmDelete) return;
 
-  // Sauvegarder la valeur sélectionnée avant la mise à jour des listes
-  const selectedWinnerBattalion = winnerBattalionSelect.value;
-  const selectedLoserBattalion = loserBattalionSelect.value;
-
-  // Effacer les options actuelles
-  winnerBattalionSelect.innerHTML = '';
-  loserBattalionSelect.innerHTML = '';
-
-  // Ajouter des options pour la faction gagnante
-  Object.keys(factionBattalionMapping[winnerFaction]).forEach(category => {
-    const optionGroup = document.createElement("optgroup");
-    optionGroup.label = category;
-
-    factionBattalionMapping[winnerFaction][category].forEach(battalion => {
-      const option = document.createElement("option");
-      option.value = battalion;  // On met le nom du bataillon comme valeur
-      option.textContent = battalion;
-      optionGroup.appendChild(option);
-    });
-
-    winnerBattalionSelect.appendChild(optionGroup);
-  });
-
-  // Ajouter des options pour la faction perdante
-  Object.keys(factionBattalionMapping[loserFaction]).forEach(category => {
-    const optionGroup = document.createElement("optgroup");
-    optionGroup.label = category;
-
-    factionBattalionMapping[loserFaction][category].forEach(battalion => {
-      const option = document.createElement("option");
-      option.value = battalion;  // On met le nom du bataillon comme valeur
-      option.textContent = battalion;
-      optionGroup.appendChild(option);
-    });
-
-    loserBattalionSelect.appendChild(optionGroup);
-  });
-
-  // Réappliquer la sélection sauvegardée
-  if (selectedWinnerBattalion) {
-    winnerBattalionSelect.value = selectedWinnerBattalion;
-  }
-  if (selectedLoserBattalion) {
-    loserBattalionSelect.value = selectedLoserBattalion;
-  }
-}
-
-// Mettre à jour les listes de bataillons lors du changement de faction
-document.getElementById("winner").addEventListener("change", updateBattalionList);
-document.getElementById("loser").addEventListener("change", updateBattalionList);
-
-// Mise à jour initiale des listes
-updateBattalionList();
-
-
-// Mettre à jour les listes de bataillons lors du changement de faction
-document.getElementById("winner").addEventListener("change", updateBattalionList);
-document.getElementById("loser").addEventListener("change", updateBattalionList);
-
-// Mise à jour initiale des listes
-updateBattalionList();
-
-
-     // Définir la valeur par défaut du champ datetime-local à UTC+1
-     document.getElementById("entryDateTime").value = getCurrentDateTimeInUTCPlusOne();
-     
-     document.getElementById("addGameForm").addEventListener("submit", function(event) {
-        event.preventDefault(); // Empêche l'envoi par défaut du formulaire
-
-        // Récupérer la valeur de la date
-        const entryDateTime = document.getElementById("entryDateTime").value;
-
-        // Convertir la valeur en format ISO
-        const isoDateTime = new Date(entryDateTime).toISOString();
-
-        // Ajouter la date ISO au formulaire avant de l'envoyer
-        const inputDateISO = document.createElement("input");
-        inputDateISO.type = "hidden";
-        inputDateISO.name = "entryDateTimeISO";
-        inputDateISO.value = isoDateTime;
-        document.getElementById("addGameForm").appendChild(inputDateISO);
-
-        // Soumettre le formulaire avec la nouvelle donnée
-        this.submit();
-    });
-
-    
-    
-  </script>
+                fetch(`/api/games/${gameId}`, { method: 'DELETE' })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Jeu supprimé avec succès');
+                            loadData(); // Reload the data to reflect the change
+                        } else {
+                            alert('Erreur lors de la suppression du jeu');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la suppression:', error);
+                    });
+            }
+        });
+    </script>
 </body>
+
 </html>
