@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 // Session configuration
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'default_secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -103,28 +103,7 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
-app.delete('/api/games/:id', checkAdmin, (req, res) => {
-  const gameId = req.params.id;
 
-  if (!gameId) {
-    return res.status(400).json({ message: 'ID de partie manquant' });
-  }
-
-  const query = 'DELETE FROM stats WHERE id = ?';
-
-  db.run(query, [gameId], function (err) {
-    if (err) {
-      console.error('Erreur lors de la suppression du jeu:', err.message);
-      return res.status(500).json({ message: 'Erreur lors de la suppression du jeu' });
-    }
-
-    if (this.changes === 0) {
-      return res.status(404).json({ message: 'Partie non trouvée' });
-    }
-
-    res.status(200).json({ message: 'Partie supprimée avec succès' });
-  });
-});
 // Handle login submission
 app.post('/admin', (req, res) => {
   const { username, password } = req.body;
@@ -160,8 +139,27 @@ app.get('/admin.html', checkAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-// Fetch game stats (admin only)
-app.get('/api/games', checkAdmin, (req, res) => {
+// Logout route
+app.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Erreur lors de la déconnexion:', err);
+      return res.status(500).send('Erreur lors de la déconnexion.');
+    }
+    res.redirect('/login');
+  });
+});
+
+// API Endpoints
+app.get('/api/check-session', (req, res) => {
+  if (req.session.loggedIn) {
+    return res.status(200).json({ message: 'Utilisateur connecté' });
+  } else {
+    return res.status(401).json({ message: 'Utilisateur non connecté' });
+  }
+});
+
+app.get('/api/games', (req, res) => {
   const query = 'SELECT * FROM stats';
   db.all(query, [], (err, rows) => {
     if (err) {
@@ -172,7 +170,6 @@ app.get('/api/games', checkAdmin, (req, res) => {
   });
 });
 
-// Add new game stats (admin only)
 app.post('/add-game', checkAdmin, (req, res) => {
   const { map, winner, loser, tickets, mode, winnerBattalion, loserBattalion, entryDateTime } = req.body;
 
@@ -196,14 +193,26 @@ app.post('/add-game', checkAdmin, (req, res) => {
   });
 });
 
-// Logout route
-app.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
+app.delete('/api/games/:id', checkAdmin, (req, res) => {
+  const gameId = req.params.id;
+
+  if (!gameId) {
+    return res.status(400).json({ message: 'ID de partie manquant' });
+  }
+
+  const query = 'DELETE FROM stats WHERE id = ?';
+
+  db.run(query, [gameId], function (err) {
     if (err) {
-      console.error('Erreur lors de la déconnexion:', err);
-      return res.status(500).send('Erreur lors de la déconnexion.');
+      console.error('Erreur lors de la suppression du jeu:', err.message);
+      return res.status(500).json({ message: 'Erreur lors de la suppression du jeu' });
     }
-    res.redirect('/login');
+
+    if (this.changes === 0) {
+      return res.status(404).json({ message: 'Partie non trouvée' });
+    }
+
+    res.status(200).json({ message: 'Partie supprimée avec succès' });
   });
 });
 

@@ -227,7 +227,7 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
         const factionBattalionMapping = {
-            "ADF": {
+    "ADF": {
     "Air assault": ["3rd Battalion, Royal Australian Regiment"],
     "Combined Arms": ["3rd Brigade Battle Group"],
     "Mechanized": ["1st Battalion, Royal Australian Regiment"],
@@ -510,6 +510,22 @@
                     });
             }
         });
+
+        
+  fetch('/api/check-session', { credentials: 'include' })
+    .then(response => {
+      if (!response.ok) {
+        window.location.href = '/login.html'; // Redirige si l'utilisateur n'est pas connecté
+      }
+    })
+    .catch(error => {
+      console.error('Erreur lors de la vérification de la session:', error);
+      window.location.href = '/login.html';
+    });
+
+
+
+        
     </script>
 </body>
 
