@@ -172,6 +172,34 @@
 
       <button type="submit">Ajouter la Partie</button>
     </form>
+
+    <section id="summary">
+      <h2>Résumé Global</h2>
+      <p>Total Parties : <strong id="totalGames">0</strong></p>
+    </section>
+
+    <section id="table">
+      <h2>Historique des Parties</h2>
+      <div id="gameTableWrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date et Heure</th>
+              <th>Carte</th>
+              <th>Mode de Jeu</th>
+              <th>Faction Gagnante et Unité</th>
+              <th>Faction Perdante et Unité</th>
+              <th>Écart de Tickets</th>
+              <th>Actions</th> <!-- New column for delete action -->
+            </tr>
+          </thead>
+          <tbody id="gameTable">
+            <!-- Rows dynamically added by JavaScript will include a delete button -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
   </main>
 
   <footer>
@@ -180,7 +208,91 @@
 
   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   <script>
+
+function loadData() {
+      fetch('/api/games?' + new Date().getTime()) 
+      
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);  
+          
+
+          const tableBody = document.querySelector('#gameTable');
+          const totalGames = document.querySelector('#totalGames');
+          let maps = new Set();
+          let factions = new Set();
+
+          
+          
+          data.sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
+
+          
+          
+          tableBody.innerHTML = '';
+
+          data.forEach(game => {
+  const row = document.createElement('tr');
+
+  const dateObject = new Date(game.gameDate);
+  const formattedDate = !isNaN(dateObject.getTime()) ? dateObject.toLocaleString() : 'Date invalide';
+
+  row.innerHTML = `
+    <td>${formattedDate}</td>
+    <td>${game.map}</td>
+    <td>${game.gameMode}</td>
+    <td>${game.winnerFaction} (${game.winnerBattalion})</td>
+    <td>${game.loserFaction} (${game.loserBattalion})</td>
+    <td>${game.ticketDiff}</td>
+    <td><button class="delete-btn" data-id="${game.id}">Supprimer</button></td> <!-- Delete button -->
+  `;
+  tableBody.appendChild(row);
+
+  // Update maps and factions (if necessary)
+  maps.add(game.map);
+  factions.add(game.winnerFaction);
+  factions.add(game.loserFaction);
+});
+
+          
+          totalGames.textContent = data.length;
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération des données:', error);
+        });
+    }
+
+    
+    loadData();
+
+    document.addEventListener('click', function(e) {
+  if (e.target && e.target.classList.contains('delete-btn')) {
+    const gameId = e.target.getAttribute('data-id');
+    
+    // Confirm deletion
+    const confirmDelete = confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');
+    if (!confirmDelete) return;
+
+    // Send a DELETE request to the backend to delete the game
+    fetch(`/api/games/${gameId}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('Jeu supprimé avec succès');
+        loadData(); // Reload the data to reflect the change
+      } else {
+        alert('Erreur lors de la suppression du jeu');
+      }
+    })
+    .catch(error => {
+      console.error('Erreur lors de la suppression:', error);
+    });
+  }
+});
     // Mapping des bataillons par faction et catégorie
+
+
+
     const factionBattalionMapping = {
   "ADF": {
     "Air assault": ["3rd Battalion, Royal Australian Regiment"],
@@ -395,6 +507,9 @@ updateBattalionList();
         // Soumettre le formulaire avec la nouvelle donnée
         this.submit();
     });
+
+    
+    
   </script>
 </body>
 </html>

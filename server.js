@@ -51,6 +51,8 @@ db.run(`
   } else {
     console.log('Table "stats" créée avec succès');
   }
+
+  
 });
 
 
@@ -164,8 +166,29 @@ db.get('SELECT * FROM users WHERE username = ?', [defaultUsername], (err, row) =
     console.log('L\'utilisateur "wagon2neige" existe déjà.');
   }
 });
+app.delete('/api/games/:id', (req, res) => {
+  const gameId = req.params.id;
 
-// Démarrage du serveur sur le port 3000
+  // Define the delete query
+  const query = 'DELETE FROM stats WHERE id = ?';
+
+  // Run the delete query
+  db.run(query, [gameId], function(err) {
+    if (err) {
+      console.error('Erreur lors de la suppression du jeu:', err.message);
+      return res.status(500).send('Erreur lors de la suppression du jeu.');
+    }
+
+    if (this.changes === 0) {
+      // If no rows were deleted
+      return res.status(404).send('Jeu non trouvé.');
+    }
+
+    res.status(200).send('Jeu supprimé avec succès.');
+  });
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Serveur lancé sur le port ${PORT}`);
