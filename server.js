@@ -4,7 +4,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const session = require('express-session'); // Pour gérer les sessions
+const session = require('express-session');
 
 // Créer une instance d'Express
 const app = express();
@@ -15,38 +15,43 @@ app.use(bodyParser.json());
 
 // Utilisation de sessions
 app.use(session({
-  secret: 'votre_secret', // À changer par une clé secrète unique
+  secret: 'votre_secret', 
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // En mode non sécurisé, à changer en production
+  cookie: { secure: false }
 }));
 
-// Créer (ou ouvrir) la base de données SQLite
+// Créer et ouvrir la base de données SQLite
+const db = new sqlite3.Database('./db.sqlite', (err) => {
+  if (err) {
+    console.error('Erreur lors de l\'ouverture de la base de données:', err.message);
+  } else {
+    console.log('Connexion à la base de données SQLite réussie');
+  }
+});
 
-db
-    // Créer la table 'stats' avec la nouvelle structure
-    db.run(`
-      CREATE TABLE IF NOT EXISTS stats (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        map TEXT NOT NULL,
-        winnerFaction TEXT NOT NULL,
-        loserFaction TEXT NOT NULL,
-        ticketDiff INTEGER NOT NULL,
-        gameMode TEXT NOT NULL,
-        winnerBattalion TEXT NOT NULL,
-        loserBattalion TEXT NOT NULL,
-        winnerCategory TEXT,
-        loserCategory TEXT,
-        gameDate TEXT NOT NULL  
-      )
-    `, (err) => {
-      if (err) {
-        console.error('Erreur lors de la création de la table stats:', err.message);
-      } else {
-        console.log('Table "stats" créée avec succès');
-      }
-    });
-;
+// Créer la table 'stats' si elle n'existe pas
+db.run(`
+  CREATE TABLE IF NOT EXISTS stats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    map TEXT NOT NULL,
+    winnerFaction TEXT NOT NULL,
+    loserFaction TEXT NOT NULL,
+    ticketDiff INTEGER NOT NULL,
+    gameMode TEXT NOT NULL,
+    winnerBattalion TEXT NOT NULL,
+    loserBattalion TEXT NOT NULL,
+    winnerCategory TEXT,
+    loserCategory TEXT,
+    gameDate TEXT NOT NULL  
+  )
+`, (err) => {
+  if (err) {
+    console.error('Erreur lors de la création de la table stats:', err.message);
+  } else {
+    console.log('Table "stats" créée avec succès');
+  }
+});
 
 
 // Serveur qui sert les fichiers statiques (comme admin.html)
