@@ -192,3 +192,14 @@ h1 {
 .chart-container {
   margin-bottom: 40px; /* Plus d'espace entre les graphiques */
 }
+
+nav ul li a {
+  color: #4CAF50; /* Couleur du texte des liens */
+  text-decoration: none;
+  padding: 10px;
+  text-align: left; 
+}
+
+nav ul li a:hover {
+  color: #FF6347; /* Couleur au survol */
+}

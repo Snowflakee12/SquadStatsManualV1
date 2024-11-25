@@ -22,25 +22,8 @@ app.use(session({
 }));
 
 // Créer (ou ouvrir) la base de données SQLite
-const db = new sqlite3.Database('./db.sqlite', (err) => {
-  if (err) {
-    console.error('Erreur de connexion à la base de données:', err.message);
-  } else {
-    console.log('Connexion à la base de données SQLite réussie.');
-  }
-});
 
-// Supprimer la table existante et la recréer avec la nouvelle structure
-// Supprimer la table existante et la recréer avec la nouvelle structure
-db.serialize(() => {
-    db.run('DROP TABLE IF EXISTS stats', (err) => {
-      if (err) {
-        console.error('Erreur lors de la suppression de la table stats:', err.message);
-      } else {
-        console.log('Table "stats" supprimée avec succès');
-      }
-    });
-  
+db
     // Créer la table 'stats' avec la nouvelle structure
     db.run(`
       CREATE TABLE IF NOT EXISTS stats (
@@ -63,7 +46,7 @@ db.serialize(() => {
         console.log('Table "stats" créée avec succès');
       }
     });
-});
+;
 
 
 // Serveur qui sert les fichiers statiques (comme admin.html)

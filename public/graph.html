@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistiques Serveur Squad - Graphiques</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Style personnalisé pour les liens de navigation */
+    nav ul li a {
+      color: #4CAF50; /* Couleur du texte des liens */
+      text-decoration: none;
+      padding: 10px;
+    }
+
+    nav ul li a:hover {
+      color: #FF6347; /* Couleur au survol */
+    }
+
+    /* Réduction de la taille des graphiques de 25% */
+    .chart-container {
+      width: 75%; /* Réduction de la largeur des graphiques */
+      margin: auto;
+      padding: 10px;
+    }
+
+    canvas {
+      width: 100% !important; /* Forcer le canvas à prendre 100% de la largeur du container */
+      height: auto !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu de navigation -->
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="graph.html">Graphiques</a></li>
+        <!-- Ajouter plus de pages ici -->
+      </ul>
+    </nav>
+    <a href="https://discord.gg/lacoalition" target="_blank">
+      <img src="logo122.jpg" alt="Logo">
+    </a>
+    <h1>Graphiques - Serveur Squad</h1>
+  </header>
+
+  <main>
+    <!-- Graphiques -->
+    <section id="charts">
+      <h2>Graphiques des Statistiques</h2>
+
+      <!-- Graphique de winrate des factions -->
+      <div class="chart-container">
+        <h3>Winrate des Factions</h3>
+        <canvas id="factionsPickrateChart"></canvas>
+      </div>
+
+      <!-- Graphique des pickrates des factions -->
+      <div class="chart-container">
+        <h3>Pickrate des Factions</h3>
+        <canvas id="factionsPickratePieChart"></canvas>
+      </div>
+
+      <!-- Graphique des pickrates des maps -->
+      <div class="chart-container">
+        <h3>Pickrate des Maps</h3>
+        <canvas id="mapsPickratePieChart"></canvas>
+      </div>
+
+      <!-- Graphique des pickrates des unités -->
+      <div class="chart-container">
+        <h3>Pickrate des Unités</h3>
+        <canvas id="unitsPickratePieChart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Statistiques Coalition by Snowflakee1206</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Fonction pour charger les données depuis l'API
+    function loadData() {
+      fetch('/api/games?' + new Date().getTime()) // Cache-busting
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);  // Vérification de la structure des données
+
+          // Génération des graphiques
+          generateFactionsPickrateChart(data);
+          generateFactionsPickratePieChart(data);
+          generateMapsPickratePieChart(data);
+          generateUnitsPickratePieChart(data);
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération des données:', error);
+        });
+    }
+
+    // Fonction pour générer le graphique des winrates des factions
+    function generateFactionsPickrateChart(data) {
+      const factionsCount = {};
+      data.forEach(game => {
+        factionsCount[game.winnerFaction] = (factionsCount[game.winnerFaction] || 0) + 1;
+      });
+
+      // Calcul du total des victoires pour convertir en pourcentage
+      const totalGames = data.length;
+      const winPercentages = Object.keys(factionsCount).map(faction => {
+        return (factionsCount[faction] / totalGames) * 100;
+      });
+
+      // Trouver la faction avec le plus de victoires
+      const maxWins = Math.max(...winPercentages);
+      const maxFactions = Object.keys(factionsCount).filter(faction => (factionsCount[faction] / totalGames) * 100 === maxWins);
+
+      const labels = Object.keys(factionsCount);
+      const values = winPercentages;
+
+      // Définir les couleurs des barres
+      const barColors = labels.map(faction => {
+        return maxFactions.includes(faction) ? '#FF6347' : '#4CAF50'; // Rouge pour les gagnants
+      });
+
+      const ctx = document.getElementById('factionsPickrateChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Winrate des Factions (%)',
+            data: values,
+            backgroundColor: barColors, // Appliquer les couleurs
+            borderColor: '#388E3C',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(tooltipItem) {
+                  return `${tooltipItem.label}: ${tooltipItem.raw.toFixed(2)}%`; // Affichage du pourcentage
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Graphique en camembert des pickrates des factions
+    function generateFactionsPickratePieChart(data) {
+      const factionsCount = {};
+      data.forEach(game => {
+        factionsCount[game.winnerFaction] = (factionsCount[game.winnerFaction] || 0) + 1;
+      });
+
+      const labels = Object.keys(factionsCount);
+      const values = Object.values(factionsCount);
+
+      const ctx = document.getElementById('factionsPickratePieChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: ['#FF6347', '#4CAF50', '#FFD700', '#32CD32', '#8A2BE2'],
+            borderColor: '#fff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(tooltipItem) {
+                  return `${tooltipItem.label}: ${tooltipItem.raw} fois`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Graphique en camembert des pickrates des maps
+    function generateMapsPickratePieChart(data) {
+      const mapsCount = {};
+      data.forEach(game => {
+        mapsCount[game.map] = (mapsCount[game.map] || 0) + 1;
+      });
+
+      const labels = Object.keys(mapsCount);
+      const values = Object.values(mapsCount);
+
+      const ctx = document.getElementById('mapsPickratePieChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: ['#1E90FF', '#FF6347', '#32CD32', '#FFD700', '#8A2BE2'],
+            borderColor: '#fff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(tooltipItem) {
+                  return `${tooltipItem.label}: ${tooltipItem.raw} fois`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Graphique en camembert des pickrates des unités
+    function generateUnitsPickratePieChart(data) {
+      const unitsCount = {};
+      data.forEach(game => {
+        unitsCount[game.winnerBattalion] = (unitsCount[game.winnerBattalion] || 0) + 1;
+        unitsCount[game.loserBattalion] = (unitsCount[game.loserBattalion] || 0) + 1;
+      });
+
+      const labels = Object.keys(unitsCount);
+      const values = Object.values(unitsCount);
+
+      const ctx = document.getElementById('unitsPickratePieChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FF9C33'],
+            borderColor: '#fff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(tooltipItem) {
+                  return `${tooltipItem.label}: ${tooltipItem.raw} fois`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Appel pour charger les données
+    loadData();
+  </script>
+</body>
+</html>

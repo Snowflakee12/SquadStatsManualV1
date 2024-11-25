@@ -8,9 +8,20 @@
 </head>
 <body>
   <header>
-    <img src="logo122.jpg" alt="Logo"> <!-- Image du logo -->
+    <a href="https://discord.gg/lacoalition" target="_blank">
+      <img src="logo122.jpg" alt="Logo">
+    </a>
+    
     <h1>Statistiques des Parties - Serveur Squad</h1>
     <a href="login.html" class="admin-link">Admin</a> <!-- Lien vers la page de login -->
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="graph.html">Graphiques</a></li>
+        <!-- Ajouter plus de pages ici -->
+      </ul>
+    </nav>
   </header>
 
   <main>
@@ -21,7 +32,7 @@
 
     <section id="table">
       <h2>Historique des Parties</h2>
-      <div id="gameTableWrapper"> <!-- Wrapper pour activer le défilement -->
+      <div id="gameTableWrapper">
         <table>
           <thead>
             <tr>
@@ -39,25 +50,10 @@
         </table>
       </div>
     </section>
-
-    <section id="charts">
-      <h2>Graphiques</h2>
-      <div class="chart-container">
-        <h3>Winrate des factions</h3> <!-- Titre du premier graphique -->
-        <canvas id="factionsPickrateChart"></canvas>
-      </div>
-      <div class="chart-container">
-        <h3>Pickrate des maps</h3> <!-- Titre du deuxième graphique -->
-        <canvas id="mapsPickrateChart"></canvas>
-      </div>
-      <div class="chart-container">
-        <canvas id="emptyChart"></canvas> <!-- Graphique vide pour futur ajout -->
-      </div>
-    </section>
   </main>
 
   <footer>
-    <p>&copy; 2024 Statistiques Coalition by Snowflakee1206</p>
+    <p>&copy; 2024 Statistiques Coalition by <a href="https://youtu.be/dQw4w9WgXcQ?si=deHtvVX7sxmG3OpY" target="_blank">Snowflakee1206</a></p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -106,10 +102,6 @@
 
           // Mise à jour du résumé
           totalGames.textContent = data.length;
-
-          // Générer les graphiques
-          generateFactionsPickrateChart(data);
-          generateMapsPickrateChart(data);
         })
         .catch(error => {
           console.error('Erreur lors de la récupération des données:', error);
@@ -118,88 +110,6 @@
 
     // Appel initial pour charger les données
     loadData();
-
-    // Fonction pour générer un graphique du pickrate des factions
-    function generateFactionsPickrateChart(data) {
-      const factionsCount = {};
-      data.forEach(game => {
-        factionsCount[game.winnerFaction] = (factionsCount[game.winnerFaction] || 0) + 1;
-      });
-
-      const labels = Object.keys(factionsCount);
-      const values = Object.values(factionsCount);
-      const totalGames = data.length;
-
-      const ctx = document.getElementById('factionsPickrateChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: values.map(value => (value / totalGames) * 100),
-            backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FF9C33'], // Variété de couleurs
-            borderColor: '#fff',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false, // Retirer la légende du dessus
-            },
-            tooltip: {
-              callbacks: {
-                label: function(tooltipItem) {
-                  return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-
-    // Fonction pour générer un graphique du pickrate des maps
-    function generateMapsPickrateChart(data) {
-      const mapsCount = {};
-      data.forEach(game => {
-        mapsCount[game.map] = (mapsCount[game.map] || 0) + 1;
-      });
-
-      const labels = Object.keys(mapsCount);
-      const values = Object.values(mapsCount);
-      const totalGames = data.length;
-
-      const ctx = document.getElementById('mapsPickrateChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: values.map(value => (value / totalGames) * 100),
-            backgroundColor: ['#1E90FF', '#FF6347', '#32CD32', '#FFD700', '#8A2BE2'], // Variété de couleurs
-            borderColor: '#fff',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false, // Retirer la légende du dessus
-            },
-            tooltip: {
-              callbacks: {
-                label: function(tooltipItem) {
-                  return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
-                }
-              }
-            }
-          }
-        }
-      });
-    }
   </script>
 </body>
 </html>
