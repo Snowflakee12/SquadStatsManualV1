@@ -102,19 +102,6 @@ const insertGameData = (gameData) => {
     });
   };
 
-// Exemple d'utilisation avec un objet de données de jeu
-const gameData = {
-  map: 'Erangel',
-  winnerFaction: 'USA',
-  loserFaction: 'PLA',
-  ticketDiff: 100,
-  gameMode: 'Battle Royale',
-  winnerBattalion: '1st Cavalry Regiment',    // Exemple de bataillon gagnant
-  loserBattalion: '195th Heavy Combined Arms Brigade', // Exemple de bataillon perdant
-  winnerCategory: 'Armored',                    // Exemple de catégorie gagnante
-  loserCategory: 'Mechanized'                   // Exemple de catégorie perdante
-};
-
 // Insérer les données de jeu dans la base de données
 insertGameData(gameData);
 
