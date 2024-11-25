@@ -13,7 +13,7 @@
     </a>
     
     <h1>Statistiques des Parties - Serveur Squad</h1>
-    <a href="login.html" class="admin-link">Admin</a> <!-- Lien vers la page de login -->
+    <a href="login.html" class="admin-link">Admin</a> 
 
     <nav>
       <ul>
@@ -58,32 +58,38 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Fonction principale pour récupérer les données et générer les statistiques
+    
+    
     function loadData() {
-      fetch('/api/games?' + new Date().getTime()) // Cache-busting pour s'assurer des données fraîches
+      fetch('/api/games?' + new Date().getTime()) 
+      
         .then(response => response.json())
         .then(data => {
-          console.log(data);  // Ajout de ce log pour inspecter la structure des données
+          console.log(data);  
+          
 
           const tableBody = document.querySelector('#gameTable');
           const totalGames = document.querySelector('#totalGames');
           let maps = new Set();
           let factions = new Set();
 
-          // Trier les données par date (assurant que 'gameDate' est au format ISO)
+          
+          
           data.sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
 
-          // Vider le tableau avant de le remplir avec les nouvelles données
+          
+          
           tableBody.innerHTML = '';
 
           data.forEach(game => {
             const row = document.createElement('tr');
 
-            // Créer un objet Date à partir de game.gameDate (format ISO)
+            
+            
             const dateObject = new Date(game.gameDate);
             const formattedDate = !isNaN(dateObject.getTime()) ? dateObject.toLocaleString() : 'Date invalide';
 
-            // Insérer les données dans le tableau
+           
             row.innerHTML = `
               <td>${formattedDate}</td>
               <td>${game.map}</td>
@@ -94,13 +100,13 @@
             `;
             tableBody.appendChild(row);
 
-            // Collecte des maps et factions pour le résumé
+            
             maps.add(game.map);
             factions.add(game.winnerFaction);
             factions.add(game.loserFaction);
           });
 
-          // Mise à jour du résumé
+          
           totalGames.textContent = data.length;
         })
         .catch(error => {
@@ -108,7 +114,7 @@
         });
     }
 
-    // Appel initial pour charger les données
+    
     loadData();
   </script>
 </body>
