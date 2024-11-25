@@ -228,18 +228,123 @@
     <script>
         const factionBattalionMapping = {
             "ADF": {
-                "Air assault": ["3rd Battalion, Royal Australian Regiment"],
-                "Combined Arms": ["3rd Brigade Battle Group"],
-                "Mechanized": ["1st Battalion, Royal Australian Regiment"]
-            },
-            "BAF": {
-                "Air assault": ["2nd Battalion, Parachute Regiment"],
-                "Armored": ["Queen's Royal Hussars Battle Group"],
-                "Combined Arms": ["3rd Division Battle Group"],
-                "Logistics": ["Royal Logistics Corps Battle Group"]
-            },
-            // (Ajoutez les autres factions ici)
-        };
+    "Air assault": ["3rd Battalion, Royal Australian Regiment"],
+    "Combined Arms": ["3rd Brigade Battle Group"],
+    "Mechanized": ["1st Battalion, Royal Australian Regiment"],
+  },
+  "BAF": {
+    "Air assault": ["2nd Battalion, Parachute Regiment"],
+    "Armored": ["Queen's Royal Hussars Battle Group"],
+    "Combined Arms": ["3rd Division Battle Group"],
+    "Logistics": ["Royal Logistics Corps Battle Group"],
+  },
+  "CAF": {
+    "Air assault": ["3rd Battalion, Royal Canadian Regiment"],
+    "Armored": ["Lord Strathcona's Horse Regiment"],
+    "Combined Arms": ["1 Canadian Mechanized Brigade Group"],
+    "Light Infantry": ["12th Armored Regiment of Canada"],
+    "Mechanized": ["1st Battalion, Royal 22e Régiment"],
+    "Motorized": ["12th Armored Regiment of Canada"],
+    "Logistics": ["6 Canadian Combat Support Brigade"],
+  },
+  "USA": {
+    "Air assault": ["1st Brigade Combat Team, 82nd Airborne Division"],
+    "Armored": ["37th Armored Regiment, 1st Armored Division"],
+    "Combined Arms": ["3rd Brigade Combat Team, 1st Infantry Division"],
+    "Light Infantry": ["1st Brigade Combat Team, 10th Mountain Division"],
+    "Mechanized": ["1st Cavalry Regiment"],
+    "Motorized": ["2nd Cavalry Stryker Brigade Combat Team"],
+    "Logistics": ["497th Combat Sustainment Support Battalion"],
+  },
+  "USMC": {
+    "Air assault": ["1st Tank Battalion, 1st Marines"],
+    "Armored": ["1st Tank Battalion, 1st Marines"],
+    "Combined Arms": ["31st Marine Expeditionary Unit"],
+    "Light Infantry": ["1st Marines Regimental Combat Team"],
+    "Mechanized": ["3rd Light Armored Recon Battalion"],
+    "Motorized": ["3rd Light Armored Recon Battalion"],
+    "Logistics": ["2nd Marine Logistics Group"],
+    "Amphibious Assault": ["4th Marines Amphibious Ready Group"],
+  },
+  "PLA": {
+    "Air assault": ["161st Air Assault Brigade"],
+    "Armored": ["195th Heavy Combined Arms Brigade"],
+    "Combined Arms": ["118th Combined Arms Brigade"],
+    "Light Infantry": ["149th Mountain Infantry Brigade"],
+    "Mechanized": ["4th Medium Combined Arms Battalion"],
+    "Motorized": ["112th Medium Combined Arms Brigade"],
+    "Logistics": ["80th Support Brigade"],
+    "Amphibious Assault": ["14th Amphibious Combined Arms Brigade"],
+  },
+  "PLA MC": {
+    "Air assault": ["4th Marine Special Combat Battalion"],
+    "Armored": ["3rd Marine Heavy Battalion"],
+    "Combined Arms": ["5th Marine Combined Arms Brigade"],
+    "Light Infantry": ["4th Marine Special Combat Battalion"],
+    "Mechanized": ["7th Marine Medium Battalion"],
+    "Logistics": ["17th Marine Support Battalion"],
+    "Amphibious Assault": ["5th Marine Combined Arms Brigade"],
+  },
+  "PLA GF": {
+    "Armored": ["9th Heavy Combined Arms Battalion"],
+    "Combined Arms": ["14th Amphibious Combined Arms Battalion"],
+    "Mechanized": ["4th Medium Combined Arms Battalion"],
+    "Motorized": ["7th Marine Medium Battalion"],
+    "Amphibious Assault": ["14th Amphibious Combined Arms Brigade"],
+  },
+  "VDV": {
+    "Air assault": ["217th Guards Airborne Regiment"],
+    "Armored": ["104th Tank Battalion"],
+    "Combined Arms": ["7th Guards Mountain Air Assault Division"],
+    "Logistics": ["150th Support Battalion"],
+  },
+  "MEA": {
+    "Air assault": ["91st Air Assault Battalion"],
+    "Armored": ["60th Prince Assur Armored Brigade"],
+    "Combined Arms": ["1st Battalion, Legion of Babylon"],
+    "Light Infantry": ["4th Border Guards Group"],
+    "Mechanized": ["3rd King Qadesh Mechanized Infantry Brigade"],
+    "Motorized": ["51st Motorized Infantry Brigade Battle Group"],
+    "Logistics": ["Vizir Hussein 2nd Support Battalion"],
+  },
+  "TLF": {
+    "Air assault": ["1st Commando Brigade Battle Group"],
+    "Armored": ["4th Armored Brigade Battle Group"],
+    "Combined Arms": ["1st Army Battle Group"],
+    "Mechanized": ["66th Mechanized Infantry Brigade Battle Group"],
+    "Motorized": ["51st Motorized Infantry Brigade Battle Group"],
+    "Logistics": ["Land Forces Logistics Command Battle Group"],
+  },
+  "PMC": {
+    "Air assault": ["Murk Water Air Wing"],
+    "Combined Arms": ["Manticore Security Task Force"],
+    "Light Infantry": ["Overwatch 6 Patrol Group"],
+  },
+  "INS": {
+    "Armored": ["Irregular Armored Squadron"],
+    "Combined Arms": ["Irregular Battle Group"],
+    "Light Infantry": ["Irregular Light Infantry"],
+    "Mechanized": ["Irregular Mechanized Platoon"],
+    "Motorized": ["Irregular Motorized Platoon"],
+    "Logistics": ["Irregular Fire Support Group"],
+  },
+  "IMF": {
+    "Armored": ["Irregular Armored Squadron"],
+    "Combined Arms": ["Irregular Battle Group"],
+    "Light Infantry": ["Irregular Light Infantry"],
+    "Mechanized": ["Irregular Mechanized Platoon"],
+    "Motorized": ["Irregular Motorized Platoon"],
+    "Logistics": ["Irregular Fire Support Group"],
+  },
+  "RGF": {
+    "Armored": ["6th Separate Tank Brigade"],
+    "Combined Arms": ["49th Combined Arms Army"],
+    "Mechanized": ["205th Separate Motor Rifle Brigade"],
+    "Motorized": ["3rd Motor Rifle Brigade"],
+    "Logistics": ["78th Detached Logistics Brigade"],
+    "Amphibious Assault": ["336th Guards Naval Infantry Brigade"],
+  },
+};
 
         function updateBattalionList() {
             const winnerFaction = document.getElementById("winner").value;
