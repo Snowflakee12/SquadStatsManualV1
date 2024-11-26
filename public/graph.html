@@ -101,130 +101,224 @@
         });
     }
 
-    
     function generateFactionsPickrateChart(data) {
-      const factionsCount = {};
-      data.forEach(game => {
-        factionsCount[game.winnerFaction] = (factionsCount[game.winnerFaction] || 0) + 1;
-      });
+  const factionStats = {};
 
-      
-      const totalGames = data.length;
-      const winPercentages = Object.keys(factionsCount).map(faction => {
-        return (factionsCount[faction] / totalGames) * 100;
-      });
+  // Filtrer les données pour inclure uniquement RAAS et AAS
+  const filteredData = data.filter(game => game.gameMode === 'RAAS' || game.gameMode === 'AAS');
 
-      
-      const maxWins = Math.max(...winPercentages);
-      const maxFactions = Object.keys(factionsCount).filter(faction => (factionsCount[faction] / totalGames) * 100 === maxWins);
+  // Calculer les victoires et participations
+  filteredData.forEach(game => {
+    const { winnerFaction, loserFaction } = game;
 
-      const labels = Object.keys(factionsCount);
-      const values = winPercentages;
+    if (!factionStats[winnerFaction]) {
+      factionStats[winnerFaction] = { wins: 0, games: 0 };
+    }
+    if (!factionStats[loserFaction]) {
+      factionStats[loserFaction] = { wins: 0, games: 0 };
+    }
 
-      
-      const barColors = labels.map(faction => {
-        return maxFactions.includes(faction) ? '#FF6347' : '#4CAF50'; // Rouge pour les gagnants
-      });
+    // Incrémenter les victoires et participations
+    factionStats[winnerFaction].wins++;
+    factionStats[winnerFaction].games++;
+    factionStats[loserFaction].games++;
+  });
 
-      const ctx = document.getElementById('factionsPickrateChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Winrate des Factions (%)',
-            data: values,
-            backgroundColor: barColors, // Appliquer les couleurs
-            borderColor: '#388E3C',
-            borderWidth: 1
-          }]
+  // Préparer les données pour le graphique
+  const labels = [];
+  const winrates = [];
+  const colors = [];
+
+  Object.keys(factionStats).forEach(faction => {
+    const stats = factionStats[faction];
+    const winrate = (stats.wins / stats.games) * 100;
+
+    labels.push(faction);
+    winrates.push(winrate);
+
+    // Couleur rouge pour la faction avec le meilleur winrate
+    const maxWinrate = Math.max(...winrates);
+    colors.push(winrate === maxWinrate ? '#FF6347' : '#4CAF50');
+  });
+
+  // Créer le graphique
+  const ctx = document.getElementById('factionsPickrateChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Winrate des Factions (%) (Modes RAAS & AAS)',
+        data: winrates,
+        backgroundColor: colors,
+        borderColor: '#388E3C',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Factions'
+          }
         },
-        options: {
-          responsive: true,
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function(tooltipItem) {
-                  return `${tooltipItem.label}: ${tooltipItem.raw.toFixed(2)}%`; // Affichage du pourcentage
-                }
-              }
+        y: {
+          title: {
+            display: true,
+            text: 'Winrate (%)'
+          },
+          ticks: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(tooltipItem) {
+              return `${tooltipItem.label}: ${tooltipItem.raw.toFixed(2)}%`; // Affichage du winrate
             }
           }
         }
-      });
+      }
     }
+  });
+}
+
 
     // Graphique en camembert des pickrates des factions
-    function generateFactionsPickratePieChart(data) {
-      const factionsCount = {};
-      data.forEach(game => {
-        factionsCount[game.winnerFaction] = (factionsCount[game.winnerFaction] || 0) + 1;
-      });
+    function generateFactionsPickrateChart(data) {
+  const factionStats = {};
 
-      const labels = Object.keys(factionsCount);
-      const values = Object.values(factionsCount);
+  // Calculer les victoires et participations
+  data.forEach(game => {
+    const { winnerFaction, loserFaction } = game;
 
-      const ctx = document.getElementById('factionsPickratePieChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: values,
-            backgroundColor: ['#FF6347', '#4CAF50', '#FFD700', '#32CD32', '#8A2BE2'],
-            borderColor: '#fff',
-            borderWidth: 1
-          }]
+    if (!factionStats[winnerFaction]) {
+      factionStats[winnerFaction] = { wins: 0, games: 0 };
+    }
+    if (!factionStats[loserFaction]) {
+      factionStats[loserFaction] = { wins: 0, games: 0 };
+    }
+
+    // Incrémenter les victoires et participations
+    factionStats[winnerFaction].wins++;
+    factionStats[winnerFaction].games++;
+    factionStats[loserFaction].games++;
+  });
+
+  // Préparer les données pour le graphique
+  const labels = [];
+  const winrates = [];
+  const colors = [];
+
+  Object.keys(factionStats).forEach(faction => {
+    const stats = factionStats[faction];
+    const winrate = (stats.wins / stats.games) * 100;
+
+    labels.push(faction);
+    winrates.push(winrate);
+
+    // Couleur rouge pour la faction avec le meilleur winrate
+    const maxWinrate = Math.max(...winrates);
+    colors.push(winrate === maxWinrate ? '#FF6347' : '#4CAF50');
+  });
+
+  // Créer le graphique
+  const ctx = document.getElementById('factionsPickrateChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Winrate des Factions (%)',
+        data: winrates,
+        backgroundColor: colors,
+        borderColor: '#388E3C',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Factions'
+          }
         },
-        options: {
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function(tooltipItem) {
-                  return `${tooltipItem.label}: ${tooltipItem.raw} fois`;
-                }
-              }
+        y: {
+          title: {
+            display: true,
+            text: 'Winrate (%)'
+          },
+          ticks: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(tooltipItem) {
+              return `${tooltipItem.label}: ${tooltipItem.raw.toFixed(2)}%`; // Affichage du winrate
             }
           }
         }
-      });
+      }
     }
+  });
+}
 
-    // Graphique en camembert des pickrates des maps
-    function generateMapsPickratePieChart(data) {
-      const mapsCount = {};
-      data.forEach(game => {
-        mapsCount[game.map] = (mapsCount[game.map] || 0) + 1;
-      });
 
-      const labels = Object.keys(mapsCount);
-      const values = Object.values(mapsCount);
+// Graphique en camembert des pickrates des maps (uniquement RAAS et AAS)
+function generateMapsPickratePieChart(data) {
+  const mapsCount = {};
 
-      const ctx = document.getElementById('mapsPickratePieChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: values,
-            backgroundColor: ['#1E90FF', '#FF6347', '#32CD32', '#FFD700', '#8A2BE2'],
-            borderColor: '#fff',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function(tooltipItem) {
-                  return `${tooltipItem.label}: ${tooltipItem.raw} fois`;
-                }
-              }
+  // Filtrer les parties pour inclure uniquement les modes RAAS et AAS
+  const filteredData = data.filter(game => game.gameMode === 'RAAS' || game.gameMode === 'AAS');
+
+  // Compter les occurrences de chaque carte
+  filteredData.forEach(game => {
+    mapsCount[game.map] = (mapsCount[game.map] || 0) + 1;
+  });
+
+  // Préparer les données pour le graphique
+  const labels = Object.keys(mapsCount);
+  const values = Object.values(mapsCount);
+
+  // Créer le graphique
+  const ctx = document.getElementById('mapsPickratePieChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: ['#1E90FF', '#FF6347', '#32CD32', '#FFD700', '#8A2BE2'],
+        borderColor: '#fff',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(tooltipItem) {
+              return `${tooltipItem.label}: ${tooltipItem.raw} fois`; // Affichage des occurrences
             }
           }
         }
-      });
+      }
     }
+  });
+}
+
+  
 
     // Graphique en camembert des pickrates des unités
     function generateUnitsPickratePieChart(data) {

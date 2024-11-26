@@ -226,7 +226,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
-        const factionBattalionMapping = {
+// Mapping between factions, categories, and battalions
+const factionBattalionMapping = {
     "ADF": {
     "Air assault": ["3rd Battalion, Royal Australian Regiment"],
     "Combined Arms": ["3rd Brigade Battle Group"],
@@ -261,7 +262,6 @@
     "Armored": ["1st Tank Battalion, 1st Marines"],
     "Combined Arms": ["31st Marine Expeditionary Unit"],
     "Light Infantry": ["1st Marines Regimental Combat Team"],
-    "Mechanized": ["3rd Light Armored Recon Battalion"],
     "Motorized": ["3rd Light Armored Recon Battalion"],
     "Logistics": ["2nd Marine Logistics Group"],
     "Amphibious Assault": ["4th Marines Amphibious Ready Group"],
@@ -344,107 +344,119 @@
     "Logistics": ["78th Detached Logistics Brigade"],
     "Amphibious Assault": ["336th Guards Naval Infantry Brigade"],
   },
-};
+}
 
-        function updateBattalionList() {
-            const winnerFaction = document.getElementById("winner").value;
-            const loserFaction = document.getElementById("loser").value;
+// Function to update battalion dropdowns
+function updateBattalionList() {
+  const winnerFaction = document.getElementById("winner").value;
+  const loserFaction = document.getElementById("loser").value;
 
-            const winnerBattalionSelect = document.getElementById("winnerBattalion");
-            const loserBattalionSelect = document.getElementById("loserBattalion");
+  const winnerBattalionSelect = document.getElementById("winnerBattalion");
+  const loserBattalionSelect = document.getElementById("loserBattalion");
 
-            // Sauvegarder les valeurs sélectionnées avant la mise à jour des listes
-            const selectedWinnerBattalion = winnerBattalionSelect.value;
-            const selectedLoserBattalion = loserBattalionSelect.value;
+  const selectedWinnerBattalion = winnerBattalionSelect.value;
+  const selectedLoserBattalion = loserBattalionSelect.value;
 
-            // Effacer les options actuelles sans effacer le contenu sélectionné
-            winnerBattalionSelect.innerHTML = '';
-            loserBattalionSelect.innerHTML = '';
+  winnerBattalionSelect.innerHTML = '';
+  loserBattalionSelect.innerHTML = '';
 
-            // Ajouter des options pour la faction gagnante
-            if (factionBattalionMapping[winnerFaction]) {
-                Object.keys(factionBattalionMapping[winnerFaction]).forEach(category => {
-                    const optgroup = document.createElement("optgroup");
-                    optgroup.label = category;
-                    factionBattalionMapping[winnerFaction][category].forEach(battalion => {
-                        const option = document.createElement("option");
-                        option.value = battalion;
-                        option.textContent = battalion;
-                        optgroup.appendChild(option);
-                    });
-                    winnerBattalionSelect.appendChild(optgroup);
-                });
-            }
+  // Populate winner faction battalions
+  if (factionBattalionMapping[winnerFaction]) {
+    Object.keys(factionBattalionMapping[winnerFaction]).forEach(category => {
+      const optgroup = document.createElement("optgroup");
+      optgroup.label = category;
+      factionBattalionMapping[winnerFaction][category].forEach(battalion => {
+        const option = document.createElement("option");
+        option.value = battalion; // Keep battalion name as value
+        option.textContent = battalion; // Display battalion name
+        option.dataset.category = category; // Add category as data attribute
+        optgroup.appendChild(option);
+      });
+      winnerBattalionSelect.appendChild(optgroup);
+    });
+  }
 
-            // Réappliquer la valeur sélectionnée du gagnant s'il y a une correspondance
-            if (selectedWinnerBattalion) {
-                winnerBattalionSelect.value = selectedWinnerBattalion;
-            }
+  // Reapply selected winner battalion
+  if (selectedWinnerBattalion) {
+    winnerBattalionSelect.value = selectedWinnerBattalion;
+  }
 
-            // Ajouter des options pour la faction perdante
-            if (factionBattalionMapping[loserFaction]) {
-                Object.keys(factionBattalionMapping[loserFaction]).forEach(category => {
-                    const optgroup = document.createElement("optgroup");
-                    optgroup.label = category;
-                    factionBattalionMapping[loserFaction][category].forEach(battalion => {
-                        const option = document.createElement("option");
-                        option.value = battalion;
-                        option.textContent = battalion;
-                        optgroup.appendChild(option);
-                    });
-                    loserBattalionSelect.appendChild(optgroup);
-                });
-            }
+  // Populate loser faction battalions
+  if (factionBattalionMapping[loserFaction]) {
+    Object.keys(factionBattalionMapping[loserFaction]).forEach(category => {
+      const optgroup = document.createElement("optgroup");
+      optgroup.label = category;
+      factionBattalionMapping[loserFaction][category].forEach(battalion => {
+        const option = document.createElement("option");
+        option.value = battalion;
+        option.textContent = battalion;
+        option.dataset.category = category; // Add category as data attribute
+        optgroup.appendChild(option);
+      });
+      loserBattalionSelect.appendChild(optgroup);
+    });
+  }
 
-            // Réappliquer la valeur sélectionnée du perdant s'il y a une correspondance
-            if (selectedLoserBattalion) {
-                loserBattalionSelect.value = selectedLoserBattalion;
-            }
-        }
+  // Reapply selected loser battalion
+  if (selectedLoserBattalion) {
+    loserBattalionSelect.value = selectedLoserBattalion;
+  }
+}
 
-        document.getElementById("winner").addEventListener("change", updateBattalionList);
-        document.getElementById("loser").addEventListener("change", updateBattalionList);
+document.getElementById("winner").addEventListener("change", updateBattalionList);
+document.getElementById("loser").addEventListener("change", updateBattalionList);
 
-        // Mise à jour initiale des listes
-        updateBattalionList();
+// Initial update
+updateBattalionList();
 
-        // Gestion de la soumission du formulaire
-        document.getElementById("addGameForm").addEventListener("submit", function (event) {
-            event.preventDefault();
+// Form submission handler
+document.getElementById("addGameForm").addEventListener("submit", function (event) {
+  event.preventDefault();
 
-            const formData = new FormData(this);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
+  const formData = new FormData(this);
+  const data = {};
+  const winnerBattalionSelect = document.getElementById("winnerBattalion");
+  const loserBattalionSelect = document.getElementById("loserBattalion");
 
-            if (data.entryDateTime) {
-                data.entryDateTime = new Date(data.entryDateTime).toISOString();
-            }
+  formData.forEach((value, key) => {
+    if (key === "winnerBattalion") {
+      const selectedOption = winnerBattalionSelect.options[winnerBattalionSelect.selectedIndex];
+      data[key] = selectedOption.dataset.category; // Send category
+    } else if (key === "loserBattalion") {
+      const selectedOption = loserBattalionSelect.options[loserBattalionSelect.selectedIndex];
+      data[key] = selectedOption.dataset.category; // Send category
+    } else {
+      data[key] = value;
+    }
+  });
 
-            fetch('/add-game', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.message === 'Partie ajoutée avec succès') {
-                        alert('Partie ajoutée avec succès');
-                        document.getElementById("addGameForm").reset();
-                        document.getElementById("entryDateTime").value = getCurrentDateTimeInUTCPlusOne();
-                        loadData();
-                    } else {
-                        alert('Erreur : ' + result.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors de l\'ajout de la partie :', error);
-                    alert('Erreur lors de l\'ajout de la partie');
-                });
-        });
+  if (data.entryDateTime) {
+    data.entryDateTime = new Date(data.entryDateTime).toISOString();
+  }
+
+  fetch('/add-game', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then(response => response.json())
+    .then(result => {
+      if (result.message === 'Partie ajoutée avec succès') {
+        alert('Partie ajoutée avec succès');
+        document.getElementById("addGameForm").reset();
+        document.getElementById("entryDateTime").value = getCurrentDateTimeInUTCPlusOne();
+        loadData();
+      } else {
+        alert('Erreur : ' + result.message);
+      }
+    })
+    .catch(error => {
+      console.error('Erreur lors de l\'ajout de la partie :', error);
+      alert('Erreur lors de l\'ajout de la partie');
+    });
+});
 
         // Définir la valeur par défaut du champ datetime-local à UTC+1
         function getCurrentDateTimeInUTCPlusOne() {
