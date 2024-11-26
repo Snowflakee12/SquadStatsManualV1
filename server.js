@@ -55,9 +55,7 @@ db.run(
   }
 );
 
-// Add a default admin user if not exists
-const defaultUsername = process.env.ADMIN_USERNAME || 'wagon2neige';
-const defaultPassword = process.env.ADMIN_PASSWORD || 'Snowplouklepgm156';
+
 
 db.get('SELECT * FROM users WHERE username = ?', [defaultUsername], (err, row) => {
   if (err) {
