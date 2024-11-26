@@ -57,30 +57,7 @@ db.run(
 
 
 
-db.get('SELECT * FROM users WHERE username = ?', [defaultUsername], (err, row) => {
-  if (err) {
-    console.error('Erreur lors de la vérification de l\'utilisateur admin:', err);
-  }
-  if (!row) {
-    bcrypt.hash(defaultPassword, saltRounds, (err, hash) => {
-      if (err) {
-        console.error('Erreur de hachage du mot de passe:', err);
-        return;
-      }
 
-      const query = 'INSERT INTO users (username, password_hash) VALUES (?, ?)';
-      db.run(query, [defaultUsername, hash], (err) => {
-        if (err) {
-          console.error('Erreur lors de l\'ajout de l\'utilisateur admin:', err.message);
-        } else {
-          console.log(`Utilisateur admin "${defaultUsername}" ajouté avec succès.`);
-        }
-      });
-    });
-  } else {
-    console.log('L\'utilisateur admin existe déjà.');
-  }
-});
 
 // Middleware to check if the user is logged in
 function checkAdmin(req, res, next) {

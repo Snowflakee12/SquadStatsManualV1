@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistiques des Maps - LaCoalition</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    header img {
+      width: 80px;
+      height: auto;
+      border-radius: 50%;
+    }
+    .search-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .search-container label,
+    .search-container select {
+      font-size: 16px;
+      padding: 10px;
+      margin: 5px;
+    }
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      text-align: center;
+      padding: 8px;
+    }
+    table th {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+
+
+<body>
+  <header>
+    <a href="https://discord.gg/lacoalition" target="_blank">
+      <img src="logo122.jpg" alt="Logo">
+    </a>
+    <h1>Statistiques des Maps - LaCoalition</h1>
+    <nav>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="graph.html">Graphiques</a></li>
+          <li><a href="data.html">Factions</a></li>
+          <li><a href="ticket.html">Tickets
+        </a></li>
+        </ul>
+      </nav>
+    </head>
+  </header>
+  <main>
+    <div class="search-container">
+      <label for="mapSelect">Rechercher une Map :</label>
+      <select id="mapSelect" name="map">
+        <option value="Skorpo">Skorpo</option>
+        <option value="Harju">Harju</option>
+        <option value="Kohat">Kohat</option>
+        <option value="Lashkar Valley">Lashkar Valley</option>
+        <option value="Narva">Narva</option>
+        <option value="Yehorivka">Yehorivka</option>
+        <option value="Sumari Bala">Sumari Bala</option>
+        <option value="Tallil Outskirts">Tallil Outskirts</option>
+        <option value="Belaya">Belaya</option>
+        <option value="Fool's Road">Fool's Road</option>
+        <option value="Gorodok">Gorodok</option>
+        <option value="Kokan">Kokan</option>
+        <option value="Kamdesh Highlands">Kamdesh Highlands</option>
+        <option value="Mutaha">Mutaha</option>
+        <option value="Manic">Manic</option>
+        <option value="Goose Bay">Goose Bay</option>
+        <option value="Black Coast">Black Coast</option>
+        <option value="Pacific Proving Grounds">Pacific Proving Grounds</option>
+        <option value="Mestia">Mestia</option>
+        <option value="Chora">Chora</option>
+        <option value="Logar Valley">Logar Valley</option>
+        <option value="Sanxian">Sanxian</option>
+        <option value="Al Basrah">Al Basrah</option>
+        <option value="Anvil">Anvil</option>
+        <option value="Fallujah">Fallujah</option>
+      </select>
+      <button onclick="fetchMapData()">Rechercher</button>
+    </div>
+
+    <section id="dataTables">
+      <div>
+        <h2>Winrate des Factions sur la Map</h2>
+        <table id="factionWinrateTable">
+          <thead>
+            <tr>
+              <th>Faction</th>
+              <th>Winrate (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <h2>Winrate des Unités sur la Map</h2>
+        <table id="unitWinrateTable">
+          <thead>
+            <tr>
+              <th>Unité</th>
+              <th>Winrate (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <h2>Winrate des Factions + Unités sur la Map</h2>
+        <table id="factionUnitWinrateTable">
+          <thead>
+            <tr>
+              <th>Faction + Unité</th>
+              <th>Winrate (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2024 Statistiques Coalition by Snowflakee1206</p>
+  </footer>
+
+  <script>
+    let allData = [];
+
+    function fetchMapData() {
+      const selectedMap = document.getElementById("mapSelect").value;
+      if (!selectedMap) return;
+
+      const mapData = allData.filter(game => game.map === selectedMap);
+
+      generateFactionWinrateTable(mapData);
+      generateUnitWinrateTable(mapData);
+      generateFactionUnitWinrateTable(mapData);
+    }
+
+    function generateFactionWinrateTable(data) {
+      const factionStats = {};
+      data.forEach(game => {
+        const { winnerFaction, loserFaction } = game;
+        if (!factionStats[winnerFaction]) factionStats[winnerFaction] = { wins: 0, games: 0 };
+        if (!factionStats[loserFaction]) factionStats[loserFaction] = { wins: 0, games: 0 };
+        factionStats[winnerFaction].wins++;
+        factionStats[winnerFaction].games++;
+        factionStats[loserFaction].games++;
+      });
+
+      const tbody = document.getElementById("factionWinrateTable").querySelector("tbody");
+      const sortedStats = Object.entries(factionStats).sort(([, a], [, b]) => (b.wins / b.games) - (a.wins / a.games));
+      tbody.innerHTML = sortedStats.map(([faction, stats]) => {
+        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
+        return `<tr><td>${faction}</td><td>${winrate} %</td></tr>`;
+      }).join('');
+    }
+
+    function generateUnitWinrateTable(data) {
+      const unitStats = {};
+      data.forEach(game => {
+        const { winnerBattalion, loserBattalion } = game;
+        if (!unitStats[winnerBattalion]) unitStats[winnerBattalion] = { wins: 0, games: 0 };
+        if (!unitStats[loserBattalion]) unitStats[loserBattalion] = { wins: 0, games: 0 };
+        unitStats[winnerBattalion].wins++;
+        unitStats[winnerBattalion].games++;
+        unitStats[loserBattalion].games++;
+      });
+
+      const tbody = document.getElementById("unitWinrateTable").querySelector("tbody");
+      const sortedStats = Object.entries(unitStats).sort(([, a], [, b]) => (b.wins / b.games) - (a.wins / a.games));
+      tbody.innerHTML = sortedStats.map(([unit, stats]) => {
+        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
+        return `<tr><td>${unit}</td><td>${winrate} %</td></tr>`;
+      }).join('');
+    }
+
+    function generateFactionUnitWinrateTable(data) {
+      const factionUnitStats = {};
+      data.forEach(game => {
+        const winner = `${game.winnerFaction} (${game.winnerBattalion})`;
+        const loser = `${game.loserFaction} (${game.loserBattalion})`;
+
+        if (!factionUnitStats[winner]) factionUnitStats[winner] = { wins: 0, games: 0 };
+        if (!factionUnitStats[loser]) factionUnitStats[loser] = { wins: 0, games: 0 };
+
+        factionUnitStats[winner].wins++;
+        factionUnitStats[winner].games++;
+        factionUnitStats[loser].games++;
+      });
+
+      const tbody = document.getElementById("factionUnitWinrateTable").querySelector("tbody");
+      const sortedStats = Object.entries(factionUnitStats).sort(([, a], [, b]) => (b.wins / b.games) - (a.wins / a.games));
+      tbody.innerHTML = sortedStats.map(([factionUnit, stats]) => {
+        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
+        return `<tr><td>${factionUnit}</td><td>${winrate} %</td></tr>`;
+      }).join('');
+    }
+
+    function loadData() {
+      fetch('/api/games')
+        .then(response => response.json())
+        .then(data => {
+          allData = data;
+        })
+        .catch(error => console.error('Erreur lors du chargement des données:', error));
+    }
+
+    loadData();
+  </script>
+</body>
+</html>

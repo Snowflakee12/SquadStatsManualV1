@@ -3,242 +3,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Statistiques de Faction - Data</title>
+  <title>Statistiques LaCoalition</title>
+  <link rel="icon" type="image/x-icon" href="logo122.jpg">
   <link rel="stylesheet" href="styles.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    .search-container {
-      text-align: center;
-      margin: 20px 0;
-    }
-    .search-container label,
-    .search-container select {
-      font-size: 16px;
+    nav ul li a {
+      color: #4CAF50;
+      text-decoration: none;
       padding: 10px;
-      margin: 5px;
     }
-    table {
-      width: 90%;
-      margin: 20px auto;
-      border-collapse: collapse;
-    }
-    table th, table td {
-      border: 1px solid #ddd;
-      text-align: center;
-      padding: 8px;
-    }
-    table th {
-      background-color: #4CAF50;
-      color: white;
+    nav ul li a:hover {
+      color: #FF6347;
     }
     .chart-container {
-      width: 80%;
-      margin: 20px auto;
+      width: 75%;
+      margin: auto;
+      padding: 10px;
+    }
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+    .faction-stats {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.2rem;
     }
   </style>
 </head>
 <body>
-    <header>
-        <nav>
-          <ul>
-            <li><a href="index.html">Accueil</a></li>
-            <li><a href="graph.html">Graphiques</a></li>
-            <li><a href="data.html">Factions</a></li>
-          </ul>
-        </nav>
-        <a href="https://discord.gg/lacoalition" target="_blank">
-          <img src="logo122.jpg" alt="Logo">
-        </a>
-        <h1>Data faction - LaCoalition</h1>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="graph.html">Graphiques</a></li>
+        <li><a href="data.html">Factions</a></li>
+        <li><a href="map.html">Maps
+        </a></li>
+      </ul>
+    </nav>
+    <a href="https://discord.gg/lacoalition" target="_blank">
+      <img src="logo122.jpg" alt="Logo">
+    </a>
+    <h1>Graphiques - LaCoalition</h1>
   </header>
-
   <main>
-    <div class="search-container">
-      <label for="factionSelect">Rechercher une faction :</label>
-      <select id="factionSelect" name="faction">
-        <!-- Options peuplées dynamiquement -->
-        <option value="ADF">ADF</option>
-        <option value="BAF">BAF</option>
-        <option value="CAF">CAF</option>
-        <option value="IMF">IMF</option>
-        <option value="INS">INS</option>
-        <option value="MEA">MEA</option>
-        <option value="PLA">PLA</option>
-        <option value="PLA GF">PLA GF</option>
-        <option value="PLA MC">PLA MC</option>
-        <option value="PMC">PMC</option>
-        <option value="RGF">RGF</option>
-        <option value="TLF">TLF</option>
-        <option value="USA">USA</option>
-        <option value="USMC">USMC</option>
-        <option value="VDV">VDV</option>
-        
-      </select>
-      <button onclick="fetchFactionData()">Rechercher</button>
-    </div>
-
-    <!-- Conteneurs pour les tableaux -->
-    <section id="dataTables">
-      <div>
-        <h2>Winrate sur les Maps</h2>
-        <table id="mapWinrateTable">
-          <thead>
-            <tr>
-              <th>Map</th>
-              <th>Winrate (%)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+    <section id="charts">
+      <h2>Graphiques des Statistiques</h2>
+      <div class="chart-container">
+        <h3>Winrate des Factions</h3>
+        <canvas id="factionsPickrateChart"></canvas>
       </div>
-      <div>
-        <h2>Winrate contre d'autres Factions</h2>
-        <table id="factionWinrateTable">
-          <thead>
-            <tr>
-              <th>Faction Opposée</th>
-              <th>Winrate (%)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="chart-container">
+        <h3>Pickrate des Factions</h3>
+        <canvas id="factionsPickratePieChart"></canvas>
       </div>
-      <div>
-        <h2>Winrate des Bataillons</h2>
-        <table id="battalionWinrateTable">
-          <thead>
-            <tr>
-              <th>Bataillon</th>
-              <th>Winrate (%)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="chart-container">
+        <h3>Pickrate des Maps</h3>
+        <canvas id="mapsPickratePieChart"></canvas>
       </div>
-      <div>
-        <h2>Winrate par Mode de Jeu</h2>
-        <table id="gameModeWinrateTable">
-          <thead>
-            <tr>
-              <th>Mode de Jeu</th>
-              <th>Winrate (%)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="chart-container">
+        <h3>Pickrate des Unités</h3>
+        <canvas id="unitsPickratePieChart"></canvas>
+      </div>
+    </section>
+    <section id="factionStats">
+      <h2>Statistiques des Factions par Mode</h2>
+      <div class="faction-stats" id="factionStatsContainer">
+        <!-- Les statistiques des factions seront insérées ici dynamiquement -->
       </div>
     </section>
   </main>
-
   <footer>
     <p>&copy; 2024 Statistiques Coalition by Snowflakee1206</p>
   </footer>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    let allData = []; // Les données récupérées
-
-    // Récupérer les données d'une faction spécifique
-    function fetchFactionData() {
-      const selectedFaction = document.getElementById("factionSelect").value;
-      if (!selectedFaction) return;
-
-      // Filtrer les données pour cette faction
-      const factionData = allData.filter(game =>
-        game.winnerFaction === selectedFaction || game.loserFaction === selectedFaction
-      );
-
-      generateWinrateTables(selectedFaction, factionData);
-    }
-
-    // Générer les tableaux de winrate
-    function generateWinrateTables(faction, data) {
-      generateTableWinratePerMap(faction, data);
-      generateTableWinrateAgainstFactions(faction, data.filter(game => game.gameMode !== 'Invasion'));
-      generateTableWinratePerBattalion(faction, data.filter(game => game.gameMode !== 'Invasion'));
-      generateTableWinratePerGameMode(faction, data);
-    }
-
-    // Winrate sur les Maps
-    function generateTableWinratePerMap(faction, data) {
-      const mapStats = {};
-      data.forEach(game => {
-        const map = game.map;
-        if (!mapStats[map]) mapStats[map] = { wins: 0, games: 0 };
-        if (game.winnerFaction === faction) mapStats[map].wins++;
-        mapStats[map].games++;
-      });
-
-      const tbody = document.getElementById("mapWinrateTable").querySelector("tbody");
-      tbody.innerHTML = Object.entries(mapStats).map(([map, stats]) => {
-        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
-        return `<tr><td>${map}</td><td>${winrate} %</td></tr>`;
-      }).join('');
-    }
-
-    // Winrate contre d'autres Factions (sans Invasion)
-    function generateTableWinrateAgainstFactions(faction, data) {
-      const factionStats = {};
-      data.forEach(game => {
-        const opponent = game.winnerFaction === faction ? game.loserFaction : game.winnerFaction;
-        if (!factionStats[opponent]) factionStats[opponent] = { wins: 0, games: 0 };
-        if (game.winnerFaction === faction) factionStats[opponent].wins++;
-        factionStats[opponent].games++;
-      });
-
-      const tbody = document.getElementById("factionWinrateTable").querySelector("tbody");
-      tbody.innerHTML = Object.entries(factionStats).map(([opponent, stats]) => {
-        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
-        return `<tr><td>${opponent}</td><td>${winrate} %</td></tr>`;
-      }).join('');
-    }
-
-    // Winrate des Bataillons (sans Invasion)
-    function generateTableWinratePerBattalion(faction, data) {
-      const battalionStats = {};
-      data.forEach(game => {
-        const battalion = game.winnerFaction === faction ? game.winnerBattalion : game.loserBattalion;
-        if (!battalionStats[battalion]) battalionStats[battalion] = { wins: 0, games: 0 };
-        if (game.winnerFaction === faction) battalionStats[battalion].wins++;
-        battalionStats[battalion].games++;
-      });
-
-      const tbody = document.getElementById("battalionWinrateTable").querySelector("tbody");
-      tbody.innerHTML = Object.entries(battalionStats).map(([battalion, stats]) => {
-        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
-        return `<tr><td>${battalion}</td><td>${winrate} %</td></tr>`;
-      }).join('');
-    }
-
-    // Winrate par Mode de Jeu
-    function generateTableWinratePerGameMode(faction, data) {
-      const modeStats = {};
-      data.forEach(game => {
-        const mode = game.gameMode;
-        if (!modeStats[mode]) modeStats[mode] = { wins: 0, games: 0 };
-        if (game.winnerFaction === faction) modeStats[mode].wins++;
-        modeStats[mode].games++;
-      });
-
-      const tbody = document.getElementById("gameModeWinrateTable").querySelector("tbody");
-      tbody.innerHTML = Object.entries(modeStats).map(([mode, stats]) => {
-        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
-        return `<tr><td>${mode}</td><td>${winrate} %</td></tr>`;
-      }).join('');
-    }
-
-    // Charger les données au démarrage
     function loadData() {
-      fetch('/api/games')
+      fetch('/api/games?' + new Date().getTime()) // Cache-busting
         .then(response => response.json())
         .then(data => {
-          allData = data; // Stocker toutes les données
+          console.log(data);
+          const filteredData = data.filter(game => game.gameMode === 'RAAS' || game.gameMode === 'AAS');
+          generateFactionsPickrateChart(filteredData);
+          generateFactionsPickratePieChart(filteredData);
+          generateMapsPickratePieChart(filteredData);
+          generateUnitsPickratePieChart(filteredData);
+          generateFactionStats(data);
         })
-        .catch(error => console.error('Erreur lors du chargement des données:', error));
+        .catch(error => {
+          console.error('Erreur lors de la récupération des données:', error);
+        });
     }
 
-    // Initialiser la page
+    // Fonction pour générer les statistiques des factions par mode de jeu
+    function generateFactionStats(data) {
+      const factionStats = {};
+      const modes = ['RAAS', 'AAS', 'Invasion', 'Seed'];
+
+      // Initialiser les statistiques pour chaque faction et mode
+      data.forEach(game => {
+        const factions = [game.winnerFaction, game.loserFaction];
+        factions.forEach(faction => {
+          if (!factionStats[faction]) {
+            factionStats[faction] = { RAAS: 0, AAS: 0, Invasion: 0, Seed: 0 };
+          }
+          if (modes.includes(game.gameMode)) {
+            factionStats[faction][game.gameMode]++;
+          }
+        });
+      });
+
+      // Générer le contenu HTML
+      const statsContainer = document.getElementById('factionStatsContainer');
+      statsContainer.innerHTML = '';
+
+      Object.keys(factionStats).forEach(faction => {
+        const stats = factionStats[faction];
+        const factionHTML = `
+          <div>
+            <h3>${faction}</h3>
+            <p>RAAS : ${stats.RAAS} parties</p>
+            <p>AAS : ${stats.AAS} parties</p>
+            <p>Invasion : ${stats.Invasion} parties</p>
+            <p>Seed : ${stats.Seed} parties</p>
+          </div>
+        `;
+        statsContainer.innerHTML += factionHTML;
+      });
+    }
+
+    // Winrate des Factions
+    function generateFactionsPickrateChart(data) {
+      const factionStats = {};
+      data.forEach(game => {
+        const { winnerFaction, loserFaction } = game;
+        if (!factionStats[winnerFaction]) factionStats[winnerFaction] = { wins: 0, games: 0 };
+        if (!factionStats[loserFaction]) factionStats[loserFaction] = { wins: 0, games: 0 };
+        factionStats[winnerFaction].wins++;
+        factionStats[winnerFaction].games++;
+        factionStats[loserFaction].games++;
+      });
+      const labels = [];
+      const winrates = [];
+      const colors = [];
+      Object.keys(factionStats).forEach(faction => {
+        const stats = factionStats[faction];
+        const winrate = (stats.wins / stats.games) * 100;
+        labels.push(faction);
+        winrates.push(winrate);
+        const maxWinrate = Math.max(...winrates);
+        colors.push(winrate === maxWinrate ? '#FF6347' : '#4CAF50');
+      });
+      const ctx = document.getElementById('factionsPickrateChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Winrate des Factions (%)',
+            data: winrates,
+            backgroundColor: colors,
+            borderColor: '#388E3C',
+            borderWidth: 1,
+          }],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: 'Factions' } },
+            y: {
+              title: { display: true, text: 'Winrate (%)' },
+              ticks: { beginAtZero: true, max: 100 },
+            },
+          },
+        },
+      });
+    }
+
+    // Charger les données au chargement de la page
     loadData();
   </script>
 </body>
