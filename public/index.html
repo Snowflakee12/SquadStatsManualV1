@@ -6,24 +6,166 @@
   <title>Statistiques LaCoalition</title>
   <link rel="icon" type="image/x-icon" href="logo122.jpg">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Section fusionnée pour en-tête et navigation */
+    header {
+      background-color: #333; /* Gris foncé */
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    header img {
+      width: 80px; /* Taille du logo agrandie */
+      height: auto;
+      border-radius: 50%; /* Rend le logo circulaire */
+      transition: transform 0.5s ease; /* Transition pour la rotation */
+    }
+
+    header img:hover {
+      transform: rotate(360deg); /* Rotation du logo lors du survol */
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin: 0;
+      text-align: center;
+      flex-grow: 1;
+      color: white;
+    }
+
+    .admin-link {
+      background-color: #e67812;
+      color: white;
+      padding: 8px 15px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .admin-link:hover {
+      background-color: #d56700;
+    }
+
+    /* Barre orange sous le titre */
+    .header-bar {
+      background-color: #FF9800;
+      height: 5px;
+      width: 100%;
+    }
+
+    /* Navigation intégrée */
+    nav {
+      width: 100%;
+      padding: 10px 0;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #4CAF50;
+      font-weight: bold;
+      padding: 10px 15px;
+      border-radius: 4px;
+    }
+
+    nav ul li a:hover {
+      color: #FF6347;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #FF9800;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main content */
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    #gameTableWrapper {
+      max-height: 600px; /* Hauteur accrue */
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1rem;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      text-align: center;
+      padding: 12px;
+    }
+
+    table th {
+      background-color: rgba(230, 128, 18, 1); /* Fond orange pour les en-têtes */
+      color: white;
+      font-weight: bold;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    table tr:hover {
+      background-color: #f1f1f1;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <a href="https://discord.gg/lacoalition" target="_blank">
-      <img src="logo122.jpg" alt="Logo">
-    </a>
-    
+    <img src="logo122.jpg" alt="Logo">
     <h1>Statistiques des Parties - LaCoalition</h1>
-    <a href="login.html" class="admin-link">Admin</a> 
-
+    <a href="login.html" class="admin-link">Admin</a>
     <nav>
       <ul>
         <li><a href="index.html">Accueil</a></li>
         <li><a href="graph.html">Graphiques</a></li>
-        <!-- Ajouter plus de pages ici -->
+        <li><a href="data.html">Factions</a></li>
       </ul>
     </nav>
+  
   </header>
+
 
   <main>
     <section id="summary">
@@ -59,38 +201,23 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    
-    
     function loadData() {
       fetch('/api/games?' + new Date().getTime()) 
-      
         .then(response => response.json())
         .then(data => {
           console.log(data);  
-          
-
           const tableBody = document.querySelector('#gameTable');
           const totalGames = document.querySelector('#totalGames');
-          let maps = new Set();
-          let factions = new Set();
 
-          
-          
           data.sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
 
-          
-          
           tableBody.innerHTML = '';
 
           data.forEach(game => {
             const row = document.createElement('tr');
-
-            
-            
             const dateObject = new Date(game.gameDate);
             const formattedDate = !isNaN(dateObject.getTime()) ? dateObject.toLocaleString() : 'Date invalide';
 
-           
             row.innerHTML = `
               <td>${formattedDate}</td>
               <td>${game.map}</td>
@@ -100,14 +227,8 @@
               <td>${game.ticketDiff}</td>
             `;
             tableBody.appendChild(row);
-
-            
-            maps.add(game.map);
-            factions.add(game.winnerFaction);
-            factions.add(game.loserFaction);
           });
 
-          
           totalGames.textContent = data.length;
         })
         .catch(error => {
@@ -115,7 +236,6 @@
         });
     }
 
-    
     loadData();
   </script>
 </body>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistiques de Faction - Data</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .search-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .search-container label,
+    .search-container select {
+      font-size: 16px;
+      padding: 10px;
+      margin: 5px;
+    }
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      text-align: center;
+      padding: 8px;
+    }
+    table th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .chart-container {
+      width: 80%;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+    <header>
+        <nav>
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="graph.html">Graphiques</a></li>
+            <li><a href="data.html">Factions</a></li>
+          </ul>
+        </nav>
+        <a href="https://discord.gg/lacoalition" target="_blank">
+          <img src="logo122.jpg" alt="Logo">
+        </a>
+        <h1>Data faction - LaCoalition</h1>
+  </header>
+
+  <main>
+    <div class="search-container">
+      <label for="factionSelect">Rechercher une faction :</label>
+      <select id="factionSelect" name="faction">
+        <!-- Options peuplées dynamiquement -->
+        <option value="ADF">ADF</option>
+        <option value="BAF">BAF</option>
+        <option value="CAF">CAF</option>
+        <option value="IMF">IMF</option>
+        <option value="INS">INS</option>
+        <option value="MEA">MEA</option>
+        <option value="PLA">PLA</option>
+        <option value="PLA GF">PLA GF</option>
+        <option value="PLA MC">PLA MC</option>
+        <option value="PMC">PMC</option>
+        <option value="RGF">RGF</option>
+        <option value="TLF">TLF</option>
+        <option value="USA">USA</option>
+        <option value="USMC">USMC</option>
+        <option value="VDV">VDV</option>
+        
+      </select>
+      <button onclick="fetchFactionData()">Rechercher</button>
+    </div>
+
+    <!-- Conteneurs pour les tableaux -->
+    <section id="dataTables">
+      <div>
+        <h2>Winrate sur les Maps</h2>
+        <table id="mapWinrateTable">
+          <thead>
+            <tr>
+              <th>Map</th>
+              <th>Winrate (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <h2>Winrate contre d'autres Factions</h2>
+        <table id="factionWinrateTable">
+          <thead>
+            <tr>
+              <th>Faction Opposée</th>
+              <th>Winrate (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <h2>Winrate des Bataillons</h2>
+        <table id="battalionWinrateTable">
+          <thead>
+            <tr>
+              <th>Bataillon</th>
+              <th>Winrate (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <h2>Winrate par Mode de Jeu</h2>
+        <table id="gameModeWinrateTable">
+          <thead>
+            <tr>
+              <th>Mode de Jeu</th>
+              <th>Winrate (%)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Statistiques Coalition by Snowflakee1206</p>
+  </footer>
+
+  <script>
+    let allData = []; // Les données récupérées
+
+    // Récupérer les données d'une faction spécifique
+    function fetchFactionData() {
+      const selectedFaction = document.getElementById("factionSelect").value;
+      if (!selectedFaction) return;
+
+      // Filtrer les données pour cette faction
+      const factionData = allData.filter(game =>
+        game.winnerFaction === selectedFaction || game.loserFaction === selectedFaction
+      );
+
+      generateWinrateTables(selectedFaction, factionData);
+    }
+
+    // Générer les tableaux de winrate
+    function generateWinrateTables(faction, data) {
+      generateTableWinratePerMap(faction, data);
+      generateTableWinrateAgainstFactions(faction, data.filter(game => game.gameMode !== 'Invasion'));
+      generateTableWinratePerBattalion(faction, data.filter(game => game.gameMode !== 'Invasion'));
+      generateTableWinratePerGameMode(faction, data);
+    }
+
+    // Winrate sur les Maps
+    function generateTableWinratePerMap(faction, data) {
+      const mapStats = {};
+      data.forEach(game => {
+        const map = game.map;
+        if (!mapStats[map]) mapStats[map] = { wins: 0, games: 0 };
+        if (game.winnerFaction === faction) mapStats[map].wins++;
+        mapStats[map].games++;
+      });
+
+      const tbody = document.getElementById("mapWinrateTable").querySelector("tbody");
+      tbody.innerHTML = Object.entries(mapStats).map(([map, stats]) => {
+        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
+        return `<tr><td>${map}</td><td>${winrate} %</td></tr>`;
+      }).join('');
+    }
+
+    // Winrate contre d'autres Factions (sans Invasion)
+    function generateTableWinrateAgainstFactions(faction, data) {
+      const factionStats = {};
+      data.forEach(game => {
+        const opponent = game.winnerFaction === faction ? game.loserFaction : game.winnerFaction;
+        if (!factionStats[opponent]) factionStats[opponent] = { wins: 0, games: 0 };
+        if (game.winnerFaction === faction) factionStats[opponent].wins++;
+        factionStats[opponent].games++;
+      });
+
+      const tbody = document.getElementById("factionWinrateTable").querySelector("tbody");
+      tbody.innerHTML = Object.entries(factionStats).map(([opponent, stats]) => {
+        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
+        return `<tr><td>${opponent}</td><td>${winrate} %</td></tr>`;
+      }).join('');
+    }
+
+    // Winrate des Bataillons (sans Invasion)
+    function generateTableWinratePerBattalion(faction, data) {
+      const battalionStats = {};
+      data.forEach(game => {
+        const battalion = game.winnerFaction === faction ? game.winnerBattalion : game.loserBattalion;
+        if (!battalionStats[battalion]) battalionStats[battalion] = { wins: 0, games: 0 };
+        if (game.winnerFaction === faction) battalionStats[battalion].wins++;
+        battalionStats[battalion].games++;
+      });
+
+      const tbody = document.getElementById("battalionWinrateTable").querySelector("tbody");
+      tbody.innerHTML = Object.entries(battalionStats).map(([battalion, stats]) => {
+        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
+        return `<tr><td>${battalion}</td><td>${winrate} %</td></tr>`;
+      }).join('');
+    }
+
+    // Winrate par Mode de Jeu
+    function generateTableWinratePerGameMode(faction, data) {
+      const modeStats = {};
+      data.forEach(game => {
+        const mode = game.gameMode;
+        if (!modeStats[mode]) modeStats[mode] = { wins: 0, games: 0 };
+        if (game.winnerFaction === faction) modeStats[mode].wins++;
+        modeStats[mode].games++;
+      });
+
+      const tbody = document.getElementById("gameModeWinrateTable").querySelector("tbody");
+      tbody.innerHTML = Object.entries(modeStats).map(([mode, stats]) => {
+        const winrate = ((stats.wins / stats.games) * 100).toFixed(2);
+        return `<tr><td>${mode}</td><td>${winrate} %</td></tr>`;
+      }).join('');
+    }
+
+    // Charger les données au démarrage
+    function loadData() {
+      fetch('/api/games')
+        .then(response => response.json())
+        .then(data => {
+          allData = data; // Stocker toutes les données
+        })
+        .catch(error => console.error('Erreur lors du chargement des données:', error));
+    }
+
+    // Initialiser la page
+    loadData();
+  </script>
+</body>
+</html>
