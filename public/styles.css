@@ -230,14 +230,6 @@ main {
   padding: 20px;
 }
 
-footer {
-  text-align: center;
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #f1f1f1;
-}
 
 label {
   display: block;
@@ -263,4 +255,25 @@ button {
 
 button:hover {
   background-color: #0056b3;
+}
+
+header {
+  background-color: #333; /* Gris foncé */
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+header img {
+  width: 80px; /* Taille du logo agrandie */
+  height: auto;
+  border-radius: 50%; /* Rend le logo circulaire */
+  transition: transform 0.5s ease; /* Transition pour la rotation */
+}
+
+header img:hover {
+  transform: rotate(360deg); /* Rotation du logo lors du survol */
 }
